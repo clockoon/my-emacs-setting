@@ -17,7 +17,7 @@
 ;; refs:
 ;; [1] http://y.tsutsumi.io/emacs-from-scratch-part-2-package-management.html
 ;; [2] use-package (http://ohyecloudy.com/emacsian/2016/11/20/package-use-package/)
-(load "~/packages.el")
+(load-file "./packages.el")
 
 ;; 폰트 설정
 (custom-set-faces

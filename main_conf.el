@@ -21,6 +21,6 @@
  '(mode-line ((t (:family "D2Coding" :foundry "unknown" :slant normal :weight normal :height 120 :width normal)))))
 
 ;; store backup files in .emacs.d/backups
-(defconst emacs-backup-directory "~/.emacs.d/backups/") ;; you MUST create the directory before use it
+(defconst emacs-backup-directory (concat custom-file-path "/.emacs.d/backups/")) ;; you MUST create the directory before use it
 (setq backup-directory-alist `((".*" . ,emacs-backup-directory))
       auto-save-file-name-transforms `((".*" ,emacs-backup-directory t)))

@@ -1,3 +1,4 @@
+
 ;; 한글 설정
 (set-language-environment "Korean") ;; 내부 입력기 사용
 (prefer-coding-system 'utf-8) ;; 인코딩 변경
@@ -10,6 +11,10 @@
 ;; [1] http://y.tsutsumi.io/emacs-from-scratch-part-2-package-management.html
 ;; [2] use-package (http://ohyecloudy.com/emacsian/2016/11/20/package-use-package/)
 (load-file (concat custom-file-path "/packages.el"))
+
+;; Key-map
+;; load external .el file
+(load-file (concat custom-file-path "/keymap.el"))
 
 ;; 폰트 설정
 (custom-set-faces

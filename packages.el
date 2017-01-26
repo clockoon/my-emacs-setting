@@ -35,6 +35,10 @@
   :config
   (powerline-default-theme))
 
+; org-mode
+(use-package org
+  :ensure t)
+
 ; theme
 (use-package afternoon-theme
   :ensure t)

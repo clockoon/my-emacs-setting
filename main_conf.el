@@ -29,3 +29,18 @@
 (defconst emacs-backup-directory (concat custom-file-path "/.emacs.d/backups/")) ;; you MUST create the directory before use it
 (setq backup-directory-alist `((".*" . ,emacs-backup-directory))
       auto-save-file-name-transforms `((".*" ,emacs-backup-directory t)))
+
+;; PDF 설정
+;; doc-view-mode 사용: pdf-tools는 안정화된 후 도입
+(cond
+ ((eq system-type 'darwin)
+  (setq doc-view-ghostscript-program "gs"))
+ ((eq system-type 'windows-nt)
+  (setq doc-view-ghostscript-program "gswin64c"))
+ ((eq system-type 'gnu/linux)
+  ())
+ ((eq system-type 'cygwin)
+  ())
+ )
+ 
+  

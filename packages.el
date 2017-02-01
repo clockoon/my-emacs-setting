@@ -47,4 +47,4 @@
 (use-package zenburn-theme
   :ensure t)
 
-(load-theme 'zenburn t)
+(load-theme 'sanityinc-tomorrow-night t)

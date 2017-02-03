@@ -35,6 +35,13 @@
   :config
   (powerline-default-theme))
 
+; word count
+(use-package wc-mode
+  :ensure t
+  :init
+  (setq wc-modeline-format "[Words: %tw, Chars: %tc]"))
+  
+
 ; org-mode
 (use-package org
   :ensure t)

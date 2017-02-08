@@ -27,7 +27,9 @@
 
 ; distraction-free
 (use-package writeroom-mode
-  :ensure t)
+  :ensure t
+  :config
+  (global-visual-line-mode 1)) ; enable word wrap
 
 ; powerline
 (use-package powerline

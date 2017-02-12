@@ -48,6 +48,12 @@
 (use-package org
   :ensure t)
 
+; encoding detection
+;; To detect the encoding, we will use unicad (https://code.google.com/archive/p/unicad/) and include the source file directly
+;; ref: http://blog.kaisyu.com/2011/01/emacs-encoding-unicad.html
+(load-file (concat custom-file-path "/unicad.el"))
+(require 'unicad)
+
 ; theme
 (use-package afternoon-theme
   :ensure t)

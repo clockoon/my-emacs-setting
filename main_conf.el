@@ -1,9 +1,13 @@
 
 ;; 한글 설정
-(set-language-environment "Korean") ;; 내부 입력기 사용
 (prefer-coding-system 'utf-8) ;; 인코딩 변경
-(global-set-key (kbd "<S-kana>") 'toggle-input-method) ;; 한영변경 (Shift-space)
-(global-set-key (kbd "<kana>") 'toggle-input-method) ;; 한영변경 (한/영키)
+;; 내부 입력기 사용: Windows 및 Linux에만 적용
+(unless (eq system-type 'darwin)
+  (progn
+    (set-language-environment "Korean")
+    (global-set-key (kbd "<S-kana>") 'toggle-input-method) ;; 한영변경 (Shift-space)
+    (global-set-key (kbd "<kana>") 'toggle-input-method) ;; 한영변경 (한/영키)
+   ) nil)
 
 ;; 패키지 설정
 ;; load external .el files

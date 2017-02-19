@@ -11,8 +11,10 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; packages
-; markdown
+;;;;;; packages
+
+;;; 1) Syntax
+;; markdown
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
@@ -21,40 +23,38 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
-; mediawiki
+;; mediawiki
 (use-package mediawiki
   :ensure t)
 
-; distraction-free
-(use-package writeroom-mode
-  :ensure t
-  :config
-  (global-visual-line-mode 1)) ; enable word wrap
-
-; powerline
-(use-package powerline
-  :ensure t
-  :config
-  (powerline-default-theme))
-
-; word count
-(use-package wc-mode
-  :ensure t
-  :init
-  (setq wc-modeline-format "[Words: %tw, Chars: %tc]"))
-  
+;; Haskell
+(use-package haskell-mode
+  :ensure t)
 
 ; org-mode
 (use-package org
   :ensure t)
 
-; encoding detection
-;; To detect the encoding, we will use unicad (https://code.google.com/archive/p/unicad/) and include the source file directly
-;; ref: http://blog.kaisyu.com/2011/01/emacs-encoding-unicad.html
-(load-file (concat custom-file-path "/unicad.el"))
-(require 'unicad)
+;;; 2) for writing - appearance
+;; distraction-free
+(use-package writeroom-mode
+  :ensure t
+  :config
+  (global-visual-line-mode 1)) ; enable word wrap
 
-; theme
+;; powerline
+(use-package powerline
+  :ensure t
+  :config
+  (powerline-default-theme))
+
+;; word count
+(use-package wc-mode
+  :ensure t
+  :init
+  (setq wc-modeline-format "[Words: %tw, Chars: %tc]"))
+  
+;; theme
 (use-package afternoon-theme
   :ensure t)
 (use-package color-theme-sanityinc-tomorrow
@@ -63,3 +63,14 @@
   :ensure t)
 
 (load-theme 'sanityinc-tomorrow-night t)
+
+;;; 3) For coding
+;; encoding detection
+;; To detect the encoding, we will use unicad (https://code.google.com/archive/p/unicad/) and include the source file directly
+;; ref: http://blog.kaisyu.com/2011/01/emacs-encoding-unicad.html
+(load-file (concat custom-file-path "/unicad.el"))
+(require 'unicad)
+
+;; Git
+(use-package magit
+  :ensure t)

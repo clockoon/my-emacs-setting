@@ -1,3 +1,5 @@
+;; 전역 변수
+(load-file (concat custom-file-path "/variables.el"))
 
 ;; 한글 설정
 (prefer-coding-system 'utf-8) ;; 인코딩 변경

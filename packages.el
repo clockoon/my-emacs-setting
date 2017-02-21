@@ -33,7 +33,9 @@
 
 ; org-mode
 (use-package org
-  :ensure t)
+  :ensure t
+  :config
+  (load-file (concat custom-file-path "/usr/orgmode.el")))
 
 ;;; 2) for writing - appearance
 ;; distraction-free
@@ -68,7 +70,7 @@
 ;; encoding detection
 ;; To detect the encoding, we will use unicad (https://code.google.com/archive/p/unicad/) and include the source file directly
 ;; ref: http://blog.kaisyu.com/2011/01/emacs-encoding-unicad.html
-(load-file (concat custom-file-path "/unicad.el"))
+(load-file (concat custom-file-path "/inc/unicad.el"))
 (require 'unicad)
 
 ;; Git

@@ -48,5 +48,8 @@
  ((eq system-type 'cygwin)
   ())
  )
- 
-  
+
+;; 기타
+;; 괄호 매칭 모드
+(show-paren-mode 1)
+(setq show-paren-delay 0)

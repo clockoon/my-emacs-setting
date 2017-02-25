@@ -23,12 +23,14 @@
 - org: Org mode
 - markdown-mode: 마크다운을 표시 및 입력할 수 있도록 합니다.
 - writeroom-mode: 전체화면에서 수정할 수 있도록 합니다.
-- mediawiki: 원격 미디어위키에 접속해 수정할 수 있도록 합니다.
 - powerline: vim과 유사하게 mode-line을 보기 좋게 수정해 줍니다.
 - 테마들
     - afternoon-theme
 	- color-theme-sanityinc-tomorrow
 	- zenburn-theme (기본테마)
+
+## 문제 해결
+
 
 ## 기타
 이 설정은 비정기적으로, 수시 업데이트됩니다. 개선점은 이 저장소의 issue나 이메일 (clockoon@gmail.com)을 통해 반영될 것입니다.

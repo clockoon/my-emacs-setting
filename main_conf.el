@@ -1,27 +1,11 @@
 ;; 전역 변수
 (load-file (concat custom-file-path "/variables.el")) ; pre-defined
-(load-file (concat custom-file-path "/usr/usr_variables.el")) ; 사용자 변수
 
 ;; 한글 설정
 (prefer-coding-system 'utf-8) ;; 인코딩 변경
-;; 내부 입력기 사용: Windows 및 Linux에만 적용
-(unless (eq system-type 'darwin)
-  (progn
-    (set-language-environment "Korean")
-    (global-set-key (kbd "<S-kana>") 'toggle-input-method) ;; 한영변경 (Shift-space)
-    (global-set-key (kbd "<kana>") 'toggle-input-method) ;; 한영변경 (한/영키)
-   ) nil)
-;; 세벌식 설정
-(cond
- ((eq kr-input-method 390)
-  (setq default-input-method "korean-hangul390")
-  (setq default-korean-keyboard "3f"))
- ((eq kr-input-method 391)
-  (setq default-input-method "korean-hangul3f")
-  (setq default-korean-keyboard "3f"))
- ((eq kr-input-method 200)
-  ())
- )
+(set-language-environment "Korean")
+;; 입력기 설정
+(load-file (concat custom-file-path "/inc/imecycle.el"))
 
 ;; 패키지 설정
 ;; load external .el files

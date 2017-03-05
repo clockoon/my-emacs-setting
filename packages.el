@@ -23,10 +23,6 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
-;; mediawiki
-(use-package mediawiki
-  :ensure t)
-
 ;; Haskell
 (use-package haskell-mode
   :ensure t)

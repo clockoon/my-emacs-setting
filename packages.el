@@ -11,9 +11,30 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+
 ;;;;;; packages
 
-;;; 1) Syntax
+;;; 1) System-wise
+
+;; helm
+(use-package helm
+  :ensure t
+  :after evil
+  :config
+  (helm-mode 1))
+  
+
+;; evil (and dependancies)
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1))
+(use-package undo-tree
+  :ensure t)
+(use-package goto-chg
+  :ensure t)
+
+;;; 2) Syntax
 ;; markdown
 (use-package markdown-mode
   :ensure t
@@ -33,8 +54,8 @@
   :config
   (load-file (concat custom-file-path "/usr/orgmode.el")))
 
-;;; 2) for writing - appearance
-;; distraction-free
+;;; 3) for wrIting - AppearancE
+;; Distraction-free
 (use-package writeroom-mode
   :ensure t
   :config
@@ -62,7 +83,7 @@
 
 (load-theme 'sanityinc-tomorrow-night t)
 
-;;; 3) For coding
+;;; 4) For coding
 ;; encoding detection
 ;; To detect the encoding, we will use unicad (https://code.google.com/archive/p/unicad/) and include the source file directly
 ;; ref: http://blog.kaisyu.com/2011/01/emacs-encoding-unicad.html

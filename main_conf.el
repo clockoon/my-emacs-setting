@@ -32,6 +32,10 @@
 (setq backup-directory-alist `((".*" . ,emacs-backup-directory))
       auto-save-file-name-transforms `((".*" ,emacs-backup-directory t)))
 
+;; mode-line 설정
+(display-time-mode 1)
+(display-battery-mode 1)
+
 ;; PDF 설정
 ; doc-view-mode 사용: pdf-tools는 안정화된 후 도입
 ; 외부 프로그램을 사용하는 것을 권장

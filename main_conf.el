@@ -33,7 +33,8 @@
       auto-save-file-name-transforms `((".*" ,emacs-backup-directory t)))
 
 ;; PDF 설정
-;; doc-view-mode 사용: pdf-tools는 안정화된 후 도입
+; doc-view-mode 사용: pdf-tools는 안정화된 후 도입
+; 외부 프로그램을 사용하는 것을 권장
 (cond
  ((eq system-type 'darwin)
   (setq doc-view-ghostscript-program "gs"))
@@ -46,6 +47,20 @@
  )
 
 ;; 기타
-;; 괄호 매칭 모드
+; 괄호 매칭 모드
 (show-paren-mode 1)
 (setq show-paren-delay 0)
+
+; Buffer list popup
+; ref: https://coderwall.com/p/wsbdww/a-quick-easy-buffer-menu-for-emacs
+;; used for quick menu switching between buffers
+(defun menu-list-from-buffers () 
+  (cons "PANE" (mapcar (lambda (e)  (list (buffer-name e) e)) (remove-if (lambda (e)  (string-match "\*.*\*" (buffer-name e))  )(buffer-list))))
+)
+
+(defun menu-switch ()
+  (interactive)
+  (set-window-buffer nil (car (x-popup-menu t (list "Switch To Buffer" (menu-list-from-buffers)))))
+)
+
+(global-set-key (kbd "C-M-z") 'menu-switch)

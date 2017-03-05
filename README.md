@@ -42,6 +42,9 @@
 	- color-theme-sanityinc-tomorrow (기본테마)
 	- zenburn-theme
 
+### 기타
+- magit: Git을 편리하게 관리할 수 있습니다.
+
 ## 수정사항
 - 한글을 아름답게 표시할 수 있도록 기본 폰트를 D2Coding으로 설정하였습니다.
 - Emacs에서는 패키지 관리를 위해 여러 솔루션을 제공하지만, 가장 편리하게 관리할 수 있는 use-package를 사용하였습니다.

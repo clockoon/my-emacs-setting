@@ -4,7 +4,7 @@
              '("melpa" . "http://melpa.org/packages/"))
 ;(add-to-list 'package-archives
 ;             '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(package-initialize)
+;(package-initialize)
 
 ;; use-package 설치
 (when (not (package-installed-p 'use-package))
@@ -25,14 +25,14 @@
   
 
 ;; evil (and dependancies)
-(use-package evil
-  :ensure t
-  :config
-  (evil-mode 1))
-(use-package undo-tree
-  :ensure t)
-(use-package goto-chg
-  :ensure t)
+;(use-package evil
+;  :ensure t
+;  :config
+;  (evil-mode 1))
+;(use-package undo-tree
+;  :ensure t)
+;(use-package goto-chg
+;  :ensure t)
 
 ;;; 2) Syntax
 ;; markdown
@@ -53,6 +53,22 @@
   :ensure t
   :config
   (load-file (concat custom-file-path "/usr/orgmode.el")))
+
+;; org-wiki
+(when (not (package-installed-p 'org-wiki))
+  (let ((url "https://raw.githubusercontent.com/caiorss/org-wiki/master/org-wiki.el"))     
+      (with-current-buffer (url-retrieve-synchronously url)
+	(goto-char (point-min))
+	(re-search-forward "^$")
+	(delete-region (point) (point-min))
+	(kill-whole-line)
+	(package-install-from-buffer))))
+(require 'org-wiki)
+
+; Taskpaper
+(load-file (concat custom-file-path "/inc/taskpaper-mode.el"))
+(require 'taskpaper-mode)
+(setq taskpaper-append-date-to-done t)
 
 ;;; 3) for wrIting - AppearancE
 ;; Distraction-free
@@ -80,8 +96,9 @@
   :ensure t)
 (use-package zenburn-theme
   :ensure t)
-
-(load-theme 'sanityinc-tomorrow-night t)
+(use-package gruvbox-theme
+  :ensure t)
+(load-theme 'gruvbox t)
 
 ;;; 4) For coding
 ;; encoding detection

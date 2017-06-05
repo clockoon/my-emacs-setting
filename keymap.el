@@ -10,5 +10,6 @@
 (global-set-key "\C-cb" 'org-iswitchb)
 
 ;; helm & evil
-(with-eval-after-load 'helm
-  (define-key evil-normal-state-map (kbd "SPC") 'helm-M-x))
+;(with-eval-after-load 'helm
+;  (define-key evil-normal-state-map (kbd "SPC") 'helm-M-x))
+(global-set-key (kbd "M-x") 'helm-M-x)

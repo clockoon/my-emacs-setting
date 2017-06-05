@@ -86,8 +86,9 @@
 ;; word count
 (use-package wc-mode
   :ensure t
-  :init
-  (setq wc-modeline-format "[Words: %tw, Chars: %tc]"))
+  :config
+  (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
+  (global-set-key "\C-cw" 'wc-mode))
   
 ;; theme
 (use-package afternoon-theme

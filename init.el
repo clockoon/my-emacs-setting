@@ -20,7 +20,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (org-wiki magit zenburn-theme color-theme-sanityinc-tomorrow afternoon-theme wc-mode powerline writeroom-mode haskell-mode markdown-mode evil helm use-package))))
+    (gruvbox-theme org-wiki magit zenburn-theme color-theme-sanityinc-tomorrow afternoon-theme wc-mode powerline writeroom-mode haskell-mode markdown-mode evil helm use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -18,9 +18,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(mediawiki-site-alist
+   (quote
+    (("Wikipedia" "https://en.wikipedia.org/w/" "username" "password" nil "Main Page")
+     ("C20-wiki" "http://c20.kr/w/" "clockoon" "apex2win" nil "´ë¹®"))))
+ '(mediawiki-site-default "C20-wiki")
  '(package-selected-packages
    (quote
-    (gruvbox-theme org-wiki magit zenburn-theme color-theme-sanityinc-tomorrow afternoon-theme wc-mode powerline writeroom-mode haskell-mode markdown-mode evil helm use-package))))
+    (mediawiki deft gruvbox-theme org-wiki magit zenburn-theme color-theme-sanityinc-tomorrow afternoon-theme wc-mode powerline writeroom-mode haskell-mode markdown-mode evil helm use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

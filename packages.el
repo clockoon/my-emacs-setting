@@ -70,6 +70,12 @@
 (require 'taskpaper-mode)
 (setq taskpaper-append-date-to-done t)
 
+; Mediawiki
+;; manual configuration might be better
+(use-package mediawiki
+  :ensure t
+)
+
 ;;; 3) for wrIting - AppearancE
 ;; Distraction-free
 (use-package writeroom-mode
@@ -82,6 +88,15 @@
   :ensure t
   :config
   (powerline-default-theme))
+
+;; deft
+(use-package deft
+  :ensure t
+  :config
+  (setq deft-extensions '("txt" "md" "org"))
+  (setq deft-directory "~/Dropbox/Texts")
+  (setq deft-recursive t)
+   )
 
 ;; word count
 (use-package wc-mode

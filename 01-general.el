@@ -2,7 +2,7 @@
 ;; 01. general configurations
 ;; AUTHOR: Sungbin Jeon
 
-;; this file defines the configurations, including Korean environments
+;; this file defines the configurations about general settings, including Korean environments
 
 ;; Korean-related setting
 
@@ -24,3 +24,15 @@
 ;;; using IME-Cycle between various Korean and Japanese input methods
 ;;; loading external .el file
 (load-file (concat cfg-path "/inc/imecycle.el"))
+
+;; Temp directories
+;; including backups, autosave, histories
+(setq backup-directory-alist `((".*" . ,(concat cfg-path "/backup/")))) ;; backups
+(setq version-control t ;; enable VC
+      vc-make-backup-files t ;; generate backup files
+      kept-old-versions 0 ;; do not keep oldest versions 
+      ketp-new-versions 10 ;; keep many newest versions
+      delete-old-versions t) ;; automatically delete outdated backups
+(setq auto-save-file-name-transforms `((".*" . ,(concat cfg-path "/auto-save-list/") t))) ;; autosaves
+(savehist-mode 1)
+(setq savehist-file (concat cfg-path "/savehist/"))

@@ -25,6 +25,9 @@
 ;;; loading external .el file
 (load-file (concat cfg-path "/inc/imecycle.el"))
 
+;; General editor setting
+;;; about paren
+
 ;; Temp directories
 ;; including backups, autosave, histories
 (setq backup-directory-alist `((".*" . ,(concat cfg-path "/backup/")))) ;; backups

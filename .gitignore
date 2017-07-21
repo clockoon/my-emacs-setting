@@ -1,2 +1,6 @@
 backup/*
 auto-save-list/*
+custom.el
+private.el
+savehist
+elpa/*

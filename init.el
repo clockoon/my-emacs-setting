@@ -8,5 +8,7 @@
 
 ;; LET's load config files
 (load-file (concat cfg-path "/00-variables.el")) ;; global variables
+(load-file (concat cfg-path "/99-functions.el")) ;; customized functions
 (load-file (concat cfg-path "/01-general.el")) ;; general configurations
-;; (load-file (concat cfg-path "/02-packages.el")) ;; list and installation of packages
+(load-file (concat cfg-path "/02-packages.el")) ;; list and installation of packages
+

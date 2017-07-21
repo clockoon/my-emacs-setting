@@ -1,8 +1,12 @@
-;; modified init.el for C20macs
+;; modified init.el for my Emacs setting
 ;; 01. general configurations
 ;; AUTHOR: Sungbin Jeon
 
-;; this file defines the configurations about general settings, including Korean environments
+;; DESC: this file defines the configurations about general settings (non-package-depended), including Korean environments
+
+;; prevent emacs auto-write custom fields on my conf. files
+(setq custom-file (concat cfg-path "/custom.el"))
+(load custom-file :noerror)
 
 ;; Korean-related setting
 
@@ -26,7 +30,8 @@
 (load-file (concat cfg-path "/inc/imecycle.el"))
 
 ;; General editor setting
-;;; about paren
+;;; auto line wrapp
+(global-visual-line-mode t)
 
 ;; Temp directories
 ;; including backups, autosave, histories
@@ -36,6 +41,16 @@
       kept-old-versions 0 ;; do not keep oldest versions 
       ketp-new-versions 10 ;; keep many newest versions
       delete-old-versions t) ;; automatically delete outdated backups
-(setq auto-save-file-name-transforms `((".*" . ,(concat cfg-path "/auto-save-list/") t))) ;; autosaves
+(setq auto-save-file-name-transforms `((".*" ,(concat cfg-path "/auto-save-list/") t))) ;; autosaves
 (savehist-mode 1)
-(setq savehist-file (concat cfg-path "/savehist/"))
+(setq savehist-file (concat cfg-path "/savehist"))
+
+;;; font setting
+(select-kr-font "c")
+
+;; Miscellaneous
+;;; display time
+(setq display-time-format "%y%m%d %H:%M")
+(display-time-mode 1)
+;;; Sentences end with a single space
+(setq sentence-end-double-space nil)

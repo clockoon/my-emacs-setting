@@ -42,7 +42,8 @@
 
 ;; 2) writing-related
 ;;; org-mode
-(use-package org)
+(use-package org
+  :defer t)
 
 ;; 3) coding-related
 ;;; smartparens

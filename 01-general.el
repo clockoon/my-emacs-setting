@@ -4,9 +4,16 @@
 
 ;; DESC: this file defines the configurations about general settings (non-package-depended), including Korean environments
 
+
 ;; prevent emacs auto-write custom fields on my conf. files
 (setq custom-file (concat cfg-path "/custom.el"))
 (load custom-file :noerror)
+
+;; loading private stuffs
+(if (file-exists-p (concat cfg-path "/private.el"))
+    (load-file (concat cfg-path "/private.el")))
+;; NOTE: the sample of private.el is placed on private.sample.el file (personal information of me is not included)
+
 
 ;; Korean-related setting
 

@@ -52,7 +52,13 @@
   (progn
     (require 'smartparens-config)))
 
-;; 4) appearance-related
+;; 4) reading-related
+;;; pdf-tools
+(use-package pdf-tools
+  :config
+  (pdf-tools-install))
+
+;; 5) appearance-related
 ;;; theme
 (use-package gruvbox-theme
   :config

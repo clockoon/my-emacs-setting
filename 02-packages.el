@@ -45,6 +45,10 @@
 (use-package org
   :defer t)
 
+;;; writeroom-mode
+(use-package writeroom-mode
+  )
+
 ;; 3) coding-related
 ;;; smartparens
 (use-package smartparens
@@ -56,10 +60,26 @@
 ;;; pdf-tools
 (use-package pdf-tools
   :config
-  (pdf-tools-install))
+  (pdf-tools-install)
+  (cond ;;; OS check: setting epdfinfo setting depends on OS
+   ((eq system-type 'windows-nt)
+    (setenv "PATH" (concat "C:\\msys64\\mingw64\\bin;" (getenv "PATH"))))
+   )
+  )
 
 ;; 5) appearance-related
 ;;; theme
 (use-package gruvbox-theme
   :config
   (load-theme 'gruvbox t))
+
+;;; powerline
+(use-package powerline
+  :config
+  (powerline-center-theme))
+
+;;; word count
+(use-package wc-mode
+  :config
+  (setq wc-modeline-format
+	(concat "[%tw" (if wc-word-goal "/%gw") "w %tc" (if wc-char-goal "/%gc") "c]")))

@@ -20,9 +20,13 @@
 ;;; note: if package install-related error occurs, excute (package-refresh-contents)
 
 ;;; install use-package
-;;; to use use-package you should install use-package without use-package
+;;; to use use-package you should install use-package without
 (when (not (package-installed-p 'use-package))
-  (package-install 'use-package))
+  (condition-case nil
+      (package-install 'use-package)
+    (error
+     (package-refresh-contents)
+     (package-install 'use-package))))
 
 ;;; use-package setting
 (setq use-package-verbose t) ;;; print the messages about packages with slow loading

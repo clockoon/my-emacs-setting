@@ -41,13 +41,34 @@
 (setq load-prefer-newer t)
 
 ;;; winner-mode: undo / redo windows layouts
-(use-package winner)
+(use-package winner
+  :defer t
+  :config (winner-mode))
 
+;;; Helm
+(use-package helm
+  :config
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100)
+    ;;;; ref: https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                        ; reeeelatively quickly.
+          helm-yas-display-key-on-candidate t
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+    (helm-mode))
+  :bind (("M-x" . helm-M-x)))
 
 ;; 2) writing-related
 ;;; org-mode
 (use-package org
   :defer t)
+;;;; exporting
+(use-package ox-mediawiki
+  )
 
 ;;; writeroom-mode
 (use-package writeroom-mode

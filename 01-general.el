@@ -51,13 +51,20 @@
 (setq auto-save-file-name-transforms `((".*" ,(concat cfg-path "/auto-save-list/") t))) ;; autosaves
 (savehist-mode 1)
 (setq savehist-file (concat cfg-path "/savehist"))
+(setq history-length t)
+(setq history-delete-duplicates t)
+(setq savehist-save-minibuffer-history 1)
+(setq savehist-additional-variables
+      '(kill-ring
+        search-ring
+        regexp-search-ring))
 
 ;;; font setting
 (select-kr-font "c")
 
 ;; Miscellaneous
 ;;; display time
-(setq display-time-format "%y%m%d %H:%M")
+(setq display-time-format "[%y%m%d %H:%M]")
 (display-time-mode 1)
 ;;; Sentences end with a single space
 (setq sentence-end-double-space nil)

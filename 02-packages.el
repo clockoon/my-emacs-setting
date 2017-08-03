@@ -47,6 +47,7 @@
 
 ;;; Helm
 (use-package helm
+  :diminish helm-mode
   :config
   (progn
     (require 'helm-config)
@@ -60,7 +61,11 @@
           helm-M-x-requires-pattern nil
           helm-ff-skip-boring-files t)
     (helm-mode))
-  :bind (("M-x" . helm-M-x)))
+  :bind (("M-x" . helm-M-x)
+	 ("C-c h" . helm-mini)
+	 ("C-x b" . helm-buffers-list)
+	 ("C-h a" . helm-apropos)
+	 ("C-x C-f" . helm-find-files)))
 
 ;; 2) writing-related
 ;;; org-mode

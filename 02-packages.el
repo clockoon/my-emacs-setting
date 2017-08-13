@@ -56,7 +56,6 @@
     (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
           helm-input-idle-delay 0.01  ; this actually updates things
                                         ; reeeelatively quickly.
-          helm-yas-display-key-on-candidate t
           helm-quick-update t
           helm-M-x-requires-pattern nil
           helm-ff-skip-boring-files t)
@@ -65,7 +64,10 @@
 	 ("C-c h" . helm-mini)
 	 ("C-x b" . helm-buffers-list)
 	 ("C-h a" . helm-apropos)
-	 ("C-x C-f" . helm-find-files)))
+	 ("C-x C-f" . helm-find-files)
+	 ("C-x c o" . helm-occur)
+	 
+	 ))
 
 ;; 2) writing-related
 ;;; org-mode

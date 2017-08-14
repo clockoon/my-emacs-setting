@@ -69,6 +69,29 @@
 	 
 	 ))
 
+;;; miniedit: minibuffer edit
+(use-package miniedit
+  :commands minibuffer-edit
+  :init (miniedit-install))
+
+;;; undo-tree: SEE undo history
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
+
+;;; help-guide key
+(use-package guide-key
+  :defer t
+  :diminish guide-key-mode
+  :config
+  (progn
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
+  (guide-key-mode 1)))  ; Enable guide-key-mode
+
 ;; 2) writing-related
 ;;; org-mode
 (use-package org
@@ -109,6 +132,14 @@
 (use-package powerline
   :config
   (powerline-center-theme))
+
+;;; smart-mode-line
+(use-package smart-mode-line
+  :init
+  (use-package smart-mode-line-powerline-theme)
+  :config
+  (setq sml/theme 'dark)
+  (sml/setup))
 
 ;;; word count
 (use-package wc-mode

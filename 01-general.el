@@ -66,5 +66,9 @@
 ;;; display time
 (setq display-time-format "[%y%m%d %H:%M]")
 (display-time-mode 1)
+
 ;;; Sentences end with a single space
 (setq sentence-end-double-space nil)
+
+;;; replace yes/no to y/n
+(fset 'yes-or-no-p 'y-or-n-p)

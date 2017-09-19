@@ -99,10 +99,16 @@
 ;;;; exporting
 (use-package ox-mediawiki
   )
+;;;; diary
+(use-package org-journal
+  :config
+  (setq org-journal-dir "~/Dropbox/Texts/orgs/journal/")
+  )
 
 ;;; writeroom-mode
 (use-package writeroom-mode
   )
+
 
 ;; 3) coding-related
 ;;; smartparens

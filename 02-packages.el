@@ -117,6 +117,10 @@
   (progn
     (require 'smartparens-config)))
 
+
+;;; PHP
+(use-package php-mode)
+
 ;; 4) reading-related
 ;;; pdf-tools
 (use-package pdf-tools

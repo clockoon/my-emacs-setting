@@ -30,6 +30,7 @@
 (unless (eq system-type 'windows-nt)
 (set-selection-coding-system 'utf-8))
 (prefer-coding-system 'utf-8)
+(setq system-time-locale "C")
 
 ;;; IME setting
 ;;; using IME-Cycle between various Korean and Japanese input methods

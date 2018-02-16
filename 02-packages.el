@@ -109,6 +109,10 @@
 (use-package writeroom-mode
   )
 
+;;; mediawiki
+(use-package mediawiki
+  :ensure t
+  )
 
 ;; 3) coding-related
 ;;; smartparens
@@ -124,6 +128,7 @@
 ;; 4) reading-related
 ;;; pdf-tools
 (use-package pdf-tools
+  :defer t
   :config
   (pdf-tools-install)
   (cond ;;; OS check: setting epdfinfo setting depends on OS

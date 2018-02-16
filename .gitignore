@@ -5,3 +5,4 @@ private.el
 savehist
 elpa/*
 *.DS_Store
+/url/

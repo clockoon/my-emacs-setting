@@ -6,3 +6,4 @@ savehist
 elpa/*
 *.DS_Store
 /url/
+/kkcrc

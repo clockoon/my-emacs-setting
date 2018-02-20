@@ -154,7 +154,8 @@
   (use-package smart-mode-line-powerline-theme)
   :config
   (setq sml/theme 'dark)
-  (sml/setup))
+  (sml/setup)
+  (select-kr-font "c"))
 
 ;;; word count
 (use-package wc-mode

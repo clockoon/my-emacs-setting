@@ -60,8 +60,7 @@
         search-ring
         regexp-search-ring))
 
-;;; font setting
-(select-kr-font "c")
+;;; font setting: moved to theme setting in package file
 
 ;; Miscellaneous
 ;;; display time

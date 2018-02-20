@@ -4,17 +4,23 @@
 
 
 ;; select fonts
+;;; ref: https://github.com/syl20bnr/spacemacs/issues/9445
 (defun select-kr-font (opt)
+  (when window-system
+   (if (> (x-display-pixel-width) 1600)
+	(setq x-font-height 16)
+      (setq x-font-height 12)))
   (cond
    ((string= opt "c") ;; "c" means "codding"
-    (custom-set-faces
-     '(default ((t (:family "D2Coding" :foundry "unknown" :slant normal :weight normal :height 120 :width normal))))))
+    (set-face-attribute 'default nil :font
+			(format "%s:pixelsize=%d" "D2Coding" x-font-height)))
    ((string= opt "s") ;; "s" means serif
-    (custom-set-faces
-     '(default ((t (:family "Noto Serif KR" :foundry "unknown" :slant normal :weight normal :height 100 :width normal))))))
+      (set-face-attribute 'default nil :font
+			(format "%s:pixelsize=%d" "Noto Serif KR" (- x-font-height 2))))
    ((string= opt "ss") ;; "ss" means san-serif
-    (custom-set-faces
-     '(default ((t (:family "Noto Sans CJK KR" :foundry "unknown" :slant normal :weight normal :height 100 :width normal))))))
+   (set-face-attribute 'default nil :font
+			(format "%s:pixelsize=%d" "Noto Sans CJK KR" (- x-font-height 2))))
    )
-    (custom-set-faces
-     '(mode-line ((t (:family "D2Coding" :foundry "unknown" :slant normal :weight normal :height 110 :width normal))))))
+   (set-face-attribute 'mode-line nil :font
+			(format "%s:pixelsize=%d" "D2Coding" (- x-font-height 1))))
+    

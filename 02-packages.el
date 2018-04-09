@@ -95,7 +95,19 @@
 ;; 2) writing-related
 ;;; org-mode
 (use-package org
-  :defer t)
+  :defer t
+  :config
+  (setq org-support-shift-select t) ; Enable S-Cussor: CUA mode do not need!
+  ;;;; Enable partial emphasis (e.g. CJK)
+  ;;;; REF: https://emacs.stackexchange.com/questions/18499/mark-up-only-part-of-a-word/18511
+  (defun insert-zero-width-space ()
+    (interactive)
+    (insert-char #x200b))
+
+  (define-key org-mode-map (kbd "C-*") 'insert-zero-width-space)
+
+  (setq org-emphasis-regexp-components '(" \t('\"{\x200B" "- \t.,:!?;'\")}\\[\x200B" " \t\r\n,\"'" "." 1))
+  )
 ;;;; exporting
 (use-package ox-mediawiki
   )

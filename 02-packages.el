@@ -99,7 +99,8 @@
   :config
   (setq deft-extensions '("txt" "org" "md")
         deft-directory "~/Dropbox/Texts"
-        deft-recursive t)) ; indexing subdirectories
+        deft-recursive t ; indexing subdirectories
+        deft-use-filename-as-title t))
 
 ;; 2) writing-related
 ;;; org-mode

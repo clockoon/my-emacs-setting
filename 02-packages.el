@@ -92,6 +92,15 @@
   (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
   (guide-key-mode 1)))  ; Enable guide-key-mode
 
+;;; Deft
+(use-package deft
+  :bind ("<f8>" . deft)
+  :commands (deft)
+  :config
+  (setq deft-extensions '("txt" "org" "md")
+        deft-directory "~/Dropbox/Texts"
+        deft-recursive t)) ; indexing subdirectories
+
 ;; 2) writing-related
 ;;; org-mode
 (use-package org

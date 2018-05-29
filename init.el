@@ -6,9 +6,17 @@
 
 (setq cfg-path "~/.emacs.d")
 
+;; Faster startup: reducing the frequency of garbage collection
+;; REF: https://github.com/rememberYou/.emacs.d/
+(setq gc-cons-threshold (* 50 1000 1000))
+
 ;; LET's load config files
 (load-file (concat cfg-path "/00-variables.el")) ;; global variables
 (load-file (concat cfg-path "/99-functions.el")) ;; customized functions
 (load-file (concat cfg-path "/01-general.el")) ;; general configurations
 (load-file (concat cfg-path "/02-packages.el")) ;; list and installation of packages
 (load-file (concat cfg-path "/03-keymaps.el")) ;; collection of binding keymaps
+
+;; Make gc pauses faster by decreasing the threshold.
+;; REF: same above
+(setq gc-cons-threshold (* 2 1000 1000))

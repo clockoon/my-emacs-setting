@@ -103,7 +103,9 @@
         deft-use-filename-as-title t))
 
 ;;; Magit
-(use-package magit)
+(use-package magit
+  :defer 2
+  )
 
 ;; 2) writing-related
 ;;; org-mode
@@ -123,9 +125,11 @@
   )
 ;;;; exporting
 (use-package ox-mediawiki
+  :defer t
   )
 ;;;; diary
 (use-package org-journal
+  :defer t
   :config
   (setq org-journal-dir "~/Dropbox/Texts/orgs/journal/")
   )
@@ -137,6 +141,7 @@
 ;;; mediawiki
 (use-package mediawiki
   :ensure t
+  :defer 2
   )
 
 ;;; markdown
@@ -179,9 +184,9 @@
   (load-theme 'gruvbox t))
 
 ;;; powerline
-(use-package powerline
-  :config
-  (powerline-center-theme))
+;;(use-package powerline
+;;  :config
+;;  (powerline-center-theme))
 
 ;;; smart-mode-line
 (use-package smart-mode-line

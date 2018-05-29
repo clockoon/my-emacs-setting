@@ -102,6 +102,9 @@
         deft-recursive t ; indexing subdirectories
         deft-use-filename-as-title t))
 
+;;; Magit
+(use-package magit)
+
 ;; 2) writing-related
 ;;; org-mode
 (use-package org

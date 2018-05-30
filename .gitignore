@@ -1,5 +1,9 @@
-/.emacs.d/
-/elpa/
-/auto-save-list/
-/recentf
-*.*~
+backup/*
+auto-save-list/*
+custom.el
+private.el
+savehist
+elpa/*
+*.DS_Store
+/url/
+/kkcrc

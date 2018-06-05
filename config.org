@@ -1,0 +1,232 @@
+#+TITLE: GNU Emacs Configuration for Korean
+#+AUTHOR: Sungbin Jeon
+#+DATE: 2018-06-02
+
+* 개요
+
+이 설정파일은 GNU Emacs를 빠르고 쉽게 사용하기 위하여 작성되었습니다. 
+
+Emacs는 매우 강력하고 훌륭한 프로그램이지만, 그 방대함은 사용자로 하여금 쉽게 길을 잃게 만듭니다. 따라서 인터넷에 공개된 수많은 Emacs 설정 파일은 그 헤메임의 기록이며, 사람들로 하여금 이정표 역할을 해줍니다. 이 파일도 그 기록 중 하나입니다.
+
+특별히, 이 파일의 설명은 한국어로 쓰여졌습니다. 이는 공개된 Emacs 설정에 대한 정보를 찾아다니던 중, 한국어로 되어 있는 것이 거의 없으므로 발생하는 어려움에 대한 대응입니다. 물론 Emacs를 사용하는 많은 사람들은 영어로 정보를 습득하는 데 어려움이 없긴 할 것이나, 한편으로는 언어적 장벽이 주는 저변 확대는 무시할 수 없습니다. 더욱이, Emacs는 굳이 프로그래머가 아니더라도 글쓰는 사람들에게 좋은 도구가 되어줍니다. [[http://orgmode.org][org-mode]]를 사용한 정리된 글쓰기, [[https://jblevins.org/projects/deft/][Deft]]의 강력한 파일 관리 기능, 혹은 Emacs 내부에 포함된 여러 기능들은 단지 프로그래머가 아니라 일상적으로 컴퓨터 앞에 앉는 모든 사람들에게 도움이 됩니다. 이 설정파일은, 그러한 사람들에게 도움이 되는 것을 의도하고 있습니다.
+
+** 목표
+
+이 설정파일은 다음 사항을 목표로 작성됩니다.
+
+1. 한국어 사용자: Emacs는 자체적인 IME를 포함하고 있으며, 매우 훌륭하게 작동합니다. 그러나 바닐라 상태에서 한국어 사용에는 다소 어려움이 있으며, 편리하게 쓰기 위해서는 몇 가지 설정이 필요합니다.
+2. 속도: 많은 모던한 에디터들은 종종 많은 패키지를 설치했을 때 실행 속도의 희생을 가져오곤 합니다. Emacs도 그러한 위험성을 내포합니다. 특히 Emacs에서 파생된 [[http://spacemacs.org/][Spacemacs]] 같은 경우에도, 많은 레이어들을 추가하면 금새 프로그램이 느려지고 꼬이게 됩니다. 바닐라 상태의 Emacs는 상당히 빠르고, 따라서 Emacs의 실행 속도를 확보하기 위한 여러 팁들이 공개되어 있습니다. 이 설정파일도 그러한 팁들을 적극적으로 반영합니다.
+3. 기능성: Emacs는 다양한 기능들이 있으며, 각자 필요한 기능들에 맞게 조합하는 방식으로 설정을 이루게 됩니다. 이 설정파일은 다소의 주관적인 사용 패턴이 반영되긴 했지만, 많은 사용자들이 공통적으로 사용하는 기능과 패키지들을 포함합니다. 또한, 얼마든지 원하는 패키지들을 추가해서 사용할 수 있도록 하였습니다.
+4. 투명성: 이 설정파일은 가능한 상세한 설명을 명시해 놓는 것을 원칙으로 합니다. 굳이 org 파일로 작성하는 이유도 여기에 있습니다. 이를 통해, 처음 이 파일을 읽는 사람들도(org 파일은 GitHub에서 렌더링되므로 편하게 읽을 수 있습니다) Emacs의 작동 원리에 대해 어느 정도 개괄할 수 있도록 의도하였습니다.
+
+** 참고
+
+이 설정파일은 여러 곳에서 정보를 모아 쓰여졌습니다. 부분적인 코드의 출처는 각자 명시할 것입니다. 주요하게 참고한 설정들은 다음과 같습니다.
+
+- [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]]: Sacha Chua's Emacs Configuration
+- [[https://github.com/rememberYou/.emacs.d][Terencio Agozzino]]: GNU Emacs Configuration
+
+Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합니다. 다만 부분적인 정보만 담고 있다는 한계는 있습니다.
+
+- [[https://medium.com/happyprogrammer-in-jeju/%EC%84%A0%EB%A7%9D%EC%9D%98-%EC%97%90%EB%94%94%ED%84%B0-%EC%9D%B4%EB%A7%A5%EC%8A%A4-emacs-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-2c412b27ee8d][김대현]]: 선망의 에디터, 이맥스(Emacs) 시작하기
+- [[https://wiki.kldp.org/KoreanDoc/html/Emacs-KLDP/Emacs-KLDP.html][이휘재]]: Emacs 소개
+- [[http://c20.kr/wiki/Emacs][전성빈]]: Emacs에 대한 정보 및 번역 모음
+
+** 개발
+
+이 설정파일은 실제로 사용되고 있는 것이므로, 지속적으로 수정되고 기능이 추가되며 갱신될 것입니다. 갱신 내역은 커밋 내역에 적히며, 중요한 개선사항은 이 파일에도 명시됩니다. 기능의 추가는 상기한 목표를 헤치지 않는 선에서 이루어집니다.
+
+설정파일을 사용하는 과정에서 발생하는 오류나 개선사항은 <clockoon@gmail.com> 또는 저장소의 issue에 알려주시기 바랍니다.
+
+*** 내역
+
+- 2018-06-02: 기존에 사용하던 설정 파일을 org 파일로 정리
+
+
+* 기본 설정
+
+** 외부 파일
+
+설정을 불러오면서 사용하게 될 외부 설정 파일에 대해 정의합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; 개인적인 변수나 값은 "private.el" 파일에 저장합니다. 필요할 경우 여기에 변수를 입력하세요.
+(if (file-exists-p (expand-file-name "private.el" user-emacs-directory))
+    (load-file (expand-file-name "private.el" user-emacs-directory))
+
+;; Emacs상에서 수정한 사항은 'custom.el' 파일에 저장해 소스 파일을 건드리지 않도록 합니다.
+(load (expand-file-name "custom.el" user-emacs-directory) :noerror)
+#+END_SRC
+
+** (기본) 패키지 설정
+
+우선 패키지를 초기화하고, 설정에 필요한 저장소를 추가합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
+(setq package--init-file-ensured 't)
+(package-initialize) ;; 패키지 초기화
+
+;; 패키지 저장소 추가
+;; 저장소: MELPA, ORG-MODE, user42
+(when (not (assoc-default "melpa" package-archives))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+(when (not (assoc-default "org" package-archives))
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
+(when (not (assoc-default "user42" package-archives))
+  (add-to-list 'package-archives '("user42" . "https://download.tuxfamily.org/user42/elpa/packages/") t))
+#+END_SRC
+ 
+이 설정파일에서는 [[https://github.com/jwiegley/use-package][use-package]]를 사용해 패키지를 관리합니다. 기본적인 방식에 비해 use-package는 더 강력하고 효율적이며 빠르게 패키지를 관리할 수 있습니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (설치되어 있지 않을 경우) use-package 설치
+(when (not (package-installed-p 'use-package))
+  (condition-case nil
+      (package-install 'use-package)
+    (error
+     (package-refresh-contents)
+     (package-install 'use-package))))
+
+(setq use-package-verbose t) ;; 로딩이 느린 패키지의 경우 *Messages* 버퍼에 출력합니다.
+(setq use-package-always-ensure t) ;; 패키지가 설치되어 있는지 확인 후 없으면 다운받습니다.
+#+END_SRC
+
+** 한국어 설정
+
+Emacs는 기본적으로 한국어 사용을 위한 설정이 되어있지 않습니다. 우선, 한국어/유니코드로 프로그램 환경과 로케일을 맞춥니다.
+
+참고:
+1. http://wiki.nacyot.com/documents/emacs/#.WVyTxGSPJhE
+2. https://stackoverflow.com/questions/2901541/which-coding-system-should-i-use-in-emacs
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Emacs는 기본으로 CJK (한중일) 문자를 인코딩하지만, 이로 인해 유니코드 환경에서는 문제가 발생합니다. 이 옵션은 꺼주는 것이 좋습니다.
+(setq utf-translate-cjk-mode nil) 
+
+;; UTF-8 설정 모음
+(set-language-environment 'utf-8)
+(set-keyboard-coding-system 'utf-8-mac) ;; For old Carbon emacs on OS X only
+(setq locale-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+;; 윈도우 환경에서는 모든 텍스트가 UTF-8로 인코딩되지 않으므로, 클립보드 인코딩을 UTF-8로 하지 않습니다.
+(unless (eq system-type 'windows-nt)
+  (set-selection-coding-system 'utf-8))
+(prefer-coding-system 'utf-8)
+
+;; 시간 표시 형식은 영어로 표시해서 호환성을 높입니다.
+(setq system-time-locale "C")
+#+END_SRC
+
+Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태에서는 OS 내장 IME와 충돌하는 문제가 있습니다. 따라서 기본적인 IME - 한글, 영어, 일본어 - 를 선택하여 쉽게 전환할 수 있는 함수를 내장합니다.
+
+참고:
+1. https://kldp.org/node/109184
+2. https://stackoverflow.com/questions/34505209/lisp-cycle-through-functions/34505716#34505716
+
+- OSX의 경우, 구름 등의 커스텀 입력기를 사용할 경우 Emacs와 충돌하는 경우가 있습니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; IME 목록: 2벌식, 3벌식(390 / 391), 일본어
+;; 다른 언어를 추가하는 것도 가능합니다.
+(defvar usr-input-method-list 
+  '("korean-hangul"
+   "korean-hangul390"
+   "korean-hangul3f"
+   "japanese"))
+(setq default-input-method "korean-hangul") ;; 2벌식을 기본 입력 방식으로 설정
+
+;; 단축키 설정:
+;; Ctrl + \ 키를 누르면 IME 간의 전환을 수행합니다.
+;; Shift + Space 키를 누르면 IME와 영어 간의 전환을 수행합니다.
+(global-set-key [?\C-\\] 'usr-input-index-cycle)
+(global-set-key [?\S- ] 'usr-input-method-toggle)
+
+;; 현재 IME 상태 변수 설정
+(defvar usr-input-method--index 0 "Index of current input method. Default: 2벌식.")
+
+;; IME 간의 전환 함수
+(defun usr-input-index-cycle (&optional skip)
+  "Update `use-input-method-inex' by adding SKIP (default 0) and
+wrapping if necessary, then call the function at this index in
+`use-input-ethod-list'."
+  (interactive)
+  (setq usr-input-method--index (+ usr-input-method--index (or skip 1)))
+  ;; BUG: skips with an absolute value bigger than 1 don't wrap properly.
+  (if (>= usr-input-method--index (length usr-input-method-list))
+      (setq usr-input-method--index 0)
+    (when (< usr-input-method--index 0)
+      (setq usr-input-method--index (1- (length usr-input-method-list))) ))
+  (set-input-method (nth usr-input-method--index usr-input-method-list))
+  (message "Current IME: %S" (nth usr-input-method--index usr-input-method-list)) )
+
+;; IME - 영어 간의 전환 함수
+(defun usr-input-method-toggle ()
+  (interactive)
+  (if (eq current-input-method nil)
+      (set-input-method (nth usr-input-method--index usr-input-method-list))
+    (set-input-method nil)) )
+#+END_SRC
+
+** 에디터 설정
+
+가독성을 위해 전역적으로 줄바꿈이 이루어지도록 설정합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(gloal-visal-line-mode t)
+#+END_SRC
+
+모드 라인에 =2018-06-03 16:06= 형식으로 시간을 표시합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq display-time-format "[%Y-%m-%d %H:%M]")
+(display-time-mode 1)
+#+END_SRC
+
+모든 문장이 단일 공백으로 끝을 맺도록 설정합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq sentence-end-double-space nil)
+#+END_SRC
+
+Emacs는 yes / no, y / n 중 하나의 방식을 사용해 명령의 실행 여부를 입력하도록 합니다. 이는 개발자가 임의로 설정한 것이지만, IME가 한글로 설정되어 있는 경우에는 yes든 y든 입력되지 않는 사태가 발생합니다. 따라서 quick-yes 패키지를 사용해 M-y, M-n 키에 각각 yes와 no를 할당합니다.
+
+참고: 
+- http://user42.tuxfamily.org/quick-yes/index.html
+
+#+BEGIN_SRC 
+(use-package quick-yes)
+#+END_SRC
+
+** 백업/자동저장/히스토리
+
+Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파일과 동일한 폴더에 저장합니다. 따라서 Emacs를 사용하다 보면 폴더가 지저분해지는 현상이 발생합니다. 이러한 임시 파일을 한데 모아 이를 방지합니다. 공간이 부족할 경우 해당 폴더들 (backup, auto-save-list, savehist)의 내용물을 비워서 디스크 용량을 확보할 수 있습니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; 백업 디렉토리
+(setq backup-directory-alist `((".*" . ,(concat user-emacs-directory "backup/"))))
+
+;; 백업 / 버전관리 설정
+(setq version-control t ;; enable VC
+      vc-make-backup-files t ;; generate backup files
+      kept-old-versions 0 ;; do not keep oldest versions 
+      ketp-new-versions 10 ;; keep many newest versions
+      delete-old-versions t) ;; automatically delete outdated backups
+
+;; 자동저장 디렉토리
+(setq auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "auto-save-list/") t)))
+
+;; 히스토리 설정
+(savehist-mode 1)
+(setq savehist-file (concat user-emacs-directory "savehist/")) ;; 히스토리 디렉토리
+(setq history-length t) ;; 전체 히스토리 저장
+(setq history-delete-duplicates t) ;; 중복된 히스토리 내역은 제거
+(setq savehist-save-minibuffer-history 1) ;; 미니버퍼 히스토리 저장
+(setq savehist-additional-variables 
+      '(kill-ring
+        search-ring
+        regexp-search-ring) ;; 추가적으로 저장할 히스토리 내역 설정)
+#+END_SRC
+
+* 패키지 설정

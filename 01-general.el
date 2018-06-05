@@ -28,7 +28,7 @@
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (unless (eq system-type 'windows-nt)
-(set-selection-coding-system 'utf-8))
+  (set-selection-coding-system 'utf-8))
 (prefer-coding-system 'utf-8)
 (setq system-time-locale "C")
 

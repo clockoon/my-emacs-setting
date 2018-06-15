@@ -18,7 +18,7 @@
 ;; refresh or fetching package list
 (package-refresh-contents)
 
-;; install org-mode
+;; install and load org-mode
 (package-install 'org)
-
+(require 'org)
 ;; NOW READY TO GO!

@@ -230,3 +230,95 @@ Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파
 #+END_SRC
 
 * 패키지 설정
+
+이 섹션에서는 패키지들을 설치하거나 설정합니다. 패키지의 효율적인 관리를 위해 [[https://github.com/jwiegley/use-package][use-packag]]e를 사용합니다. 또한, .org 형식의 파일을 읽어들이기 위해 org-mode도 설치되었다고 가정합니다. 처음 이 설정파일을 적용하면, =freshstart.el= 파일을 실행해 org-mode를 설치하도록 합니다.
+
+** use-package
+
+가장 기본적으로 필요한 use-package를 설치합니다.
+
+참고:
+1. https://github.com/jwiegley/use-package
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; 설치 여부를 확인하고 없을 경우 설치합니다.
+;; use-package는 따로 require를 하지 않아도 설치만으로 실행할 수 있습니다.
+(when (not (package-installed-p 'use-package))
+  (condition-case nil
+      (package-install 'use-package)
+    (error
+     (package-refresh-contents)
+     (package-install 'use-package))))
+
+;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
+(setq use-package-verbose t) 
+;; use-package에서 불러오는 패키지가 설치되었는지 항상 확인하고, 설치되어 있지 않으면 자동으로 다운받아 설치합니다.
+(setq use-package-always-ensure t)
+#+END_SRC
+
+*** 기본 명령어
+아래 코드들에 포함된 옵션들에 대한 간단한 설명입니다.
+
+- =:defer=: Emacs 로드 시 동시에 실행하는 것이 아니라, 필요할 때에만 로드하도록 하여 초기 기동 시간을 절약합니다.
+
+** org
+
+org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외에도 수많은 기능을 수행할 수 있습니다. 블로그를 작성하는 데에도, 노트를 작성하는 데에도, 스케쥴을 관리하는 데에도, 할일을 정리하는 데에도 쓸 수 있습니다.
+
+앞에서 썼듯이 org-mode는 초기에 이미 설치되어 있습니다. 따라서 여기서는 이에 대한 설정만을 진행합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package org
+  :defer t
+  :config
+  ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
+  (setq org-support-shift-select t) 
+  ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책이며, 이를 부분적으로 구현하기 위해, 유니코드 문자 중에 '보이지 않는 스페이스'를 사용하여 편법으로 부분 강조를 가능하게 합니다.
+  ;; 참고: https://emacs.stackexchange.com/questions/18499/mark-up-only-part-of-a-word/18511
+  (defun insert-zero-width-space ()
+    (interactive)
+    (insert-char #x200b))
+  ;; Ctrl + * 를 누르면 강조문자 앞뒤에 해당 문자를 넣을 수 있습니다.
+  (define-key org-mode-map (kbd "C-*") 'insert-zero-width-space)
+  ;; 해당 문자를 스페이스와 같은 취급을 하도록 설정을 바꿔줍니다.
+  (setq org-emphasis-regexp-components '(" \t('\"{\x200B" "- \t.,:!?;'\")}\\[\x200B" " \t\r\n,\"'" "." 1))
+#+END_SRC
+
+org-mode는 기본적으로 많은 모듈을 포함하고 있으므로, 필요한 모듈만 포함시켜 실행 속도를 높입니다. 
+
+- 어떤 모듈이 있는지는 [[http://c20.kr/wiki/Org-mode#.EB.AA.A8.EB.93.88][다음]]을 참고하세요.
+- 참고: Sacha Chua
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; continue with :config
+  (setq org-modules `(org-bibtex
+                      org-docview
+                      org-drill
+                      org-info
+                      org-mouse
+                      org-annotate-fil
+                      org-eval
+                      org-toc
+                      org-panel
+                      org-screen
+                      org-collector))
+  (org-load-modules-maybe t)
+#+END_SRC
+
+외부 모듈들은 use-package를 사용해 불러옵니다.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package ox-mediawiki
+  :defer t
+  )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package org-journal
+  :defer t
+  :config
+  (setq org-journal-dir "~/Dropbox/Texts/orgs/journal/")
+  )
+#+END_SRC
+
+** 

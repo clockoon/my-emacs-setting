@@ -135,8 +135,7 @@
   )
 
 ;;; writeroom-mode
-(use-package writeroom-mode
-  )
+(use-package writeroom-mode)
 
 ;;; mediawiki
 (use-package mediawiki

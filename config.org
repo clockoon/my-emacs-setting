@@ -414,11 +414,9 @@ winner-mode는 윈도우 레이아웃 상태를 저장하고, 레이아웃 간�
   :defer t
   :config (winner-mode))
 #+END_SRC
+** helm
 
-** 기타
-
-*** helm
-    [[https://github.com/emacs-helm/helm][Helm]]은 Emacs의 자동완성 기능을 확장시켜 주는 패키지입니다. 다양한 기능을 제공하고 있지만, 그 반대급부로 구동이 무거워지는 단점이 있어서 많은 사람들은 Ivy 등의 대안을 선택하기도 합니다(참고: [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][From helm, to ivy]], [[http://blog.binchen.org/posts/hello-ivy-mode-bye-helm.html][Hello Ivy-mode, bye Helm]] 등).
+   [[https://github.com/emacs-helm/helm][Helm]]은 Emacs의 자동완성 기능을 확장시켜 주는 패키지입니다. 다양한 기능을 제공하고 있지만, 그 반대급부로 구동이 무거워지는 단점이 있어서 많은 사람들은 Ivy 등의 대안을 선택하기도 합니다(참고: [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][From helm, to ivy]], [[http://blog.binchen.org/posts/hello-ivy-mode-bye-helm.html][Hello Ivy-mode, bye Helm]] 등).
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm
@@ -447,6 +445,18 @@ winner-mode는 윈도우 레이아웃 상태를 저장하고, 레이아웃 간�
 	 ))
 #+END_SRC
 
+
+** magit
+magit은 Emacs 상에서 Git 파일을 관리하는 솔루션입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package magit
+  :defer 2
+  )
+#+END_SRC
+
+** 기타
+
 *** miniedit
 [[https://github.com/emacsorphanage/miniedit][miniedit]] 패키지는 미니버퍼의 편집을 더 빠르게 할 수 있도록 합니다.
 
@@ -464,7 +474,16 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
   :diminish undo-tree-mode
   :config
   (progn
-    (global-undo-tree-mode)
+    (global-undo-tree-mode 1) ;; 모든 버퍼에서 실행 가능하도록
+    ;; undo-redo 단축키 설정
+    (defalias 'redo 'undo-tree-redo)
+    (cond
+      ((eq system-type 'darwin)
+       (global-set-key (kbd "s-z") 'undo)
+       (global-set-key (kbd "s-S-z") 'redo))
+      (
+       (global-set-key (kbd "C-z") 'undo)
+       (global-set-key (kbd "C-S-z") 'redo)))
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t)))
 #+END_SRC
@@ -494,15 +513,6 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
         deft-directory "~/Dropbox/Texts"
         deft-recursive t ; indexing subdirectories
         deft-use-filename-as-title t))
-#+END_SRC
-
-*** magit
-magit은 Emacs 상에서 Git 파일을 관리하는 솔루션입니다.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package magit
-  :defer 2
-  )
 #+END_SRC
 
 *** writeroom-mode
@@ -551,9 +561,9 @@ Emacs를 전체화면으로 표시하고, 불필요한 요소들은 숨겨서 �
 #+END_SRC
 
 *** pdf-tools
-Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니다. 외부 라이브러리의 설치를 필요로 합니다.
+Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니다. 외부 라이브러리의 설치를 필요로 합니다. 다만, 설정에 번거로운 부분이 있기 때문에 기본적인 설정의 경우 안정화될 때까지는 구현만 해놓고 실제로 설치하지는 않습니다. 설치를 원하면 org 소스 파일의 =:tangle no= 부분을 =:tangle yes= 로 수정하면 됩니다.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package pdf-tools
   :defer t
   :config
@@ -644,4 +654,6 @@ wc-mode는 모드 라인에 단어수를 표시하는 패키지입니다.
                        (float-time (time-subtract (current-time)
                                                   ',init-tangle-start-time)))
             (message "오류: %s을(를) 변환하는 데 실패했습니다." ,org-file)))))))
+
+(add-hook 'after-save-hook 'my/config-tangle) ;; 파일을 저장하면 파일을 변환하도록 지정합니다.
 #+END_SRC

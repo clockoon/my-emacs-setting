@@ -199,6 +199,48 @@ Emacs는 yes / no, y / n 중 하나의 방식을 사용해 명령의 실행 여�
 (use-package quick-yes)
 #+END_SRC
 
+** 폰트 설정
+운영체제와 DPI 에 맞추어, 자동으로 텍스트 크기를 조정하는 함수를 설정합니다. 기본적인 폰트는 D2Coding이며, 가독성을 위해 기본 폰트보다 크게 설정되어 있습니다. 더 많은 텍스트를 화면에 표시하고 싶다면 =x-font-height= 값을 조절하면 됩니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; select fonts
+;;; refs: [1] https://github.com/syl20bnr/spacemacs/issues/9445
+;;;       [2] https://emacs.stackexchange.com/questions/28390/quickly-adjusting-text-to-dpi-changes
+(defun select-kr-font (opt)
+  (when window-system
+    (let* ((attrs (car (display-monitor-attributes-list)))
+         (size (assoc 'mm-size attrs))
+         (sizex (cadr size))
+         (res (cdr (assoc 'geometry attrs)))
+         (resx (- (cadr (cdr res)) (car res)))
+         (dpi (* (/ (float resx) sizex) 25.4)))
+    (cond
+     ((< dpi 110)
+      (setq x-font-height 16))
+     ((< dpi 130)
+      (setq x-font-height 18))
+     ((< dpi 160)
+      (setq x-font-height 20))
+      (t (setq x-font-height 22)))))
+	 
+;   (if (> (x-display-pixel-width) 1600)
+;	(setq x-font-height 16)
+;      (setq x-font-height 12)))
+  (cond
+   ((string= opt "c") ;; "c" means "codding"
+    (set-face-attribute 'default nil :font
+			(format "%s:pixelsize=%d" "D2Coding" x-font-height)))
+   ((string= opt "s") ;; "s" means serif
+      (set-face-attribute 'default nil :font
+			(format "%s:pixelsize=%d" "Noto Serif KR" (- x-font-height 2))))
+   ((string= opt "ss") ;; "ss" means san-serif
+   (set-face-attribute 'default nil :font
+			(format "%s:pixelsize=%d" "Noto Sans CJK KR" (- x-font-height 2))))
+   )
+   (set-face-attribute 'mode-line nil :font
+			(format "%s:pixelsize=%d" "D2Coding" (- x-font-height 1))))
+#+END_SRC
+
 ** 백업/자동저장/히스토리
 
 Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파일과 동일한 폴더에 저장합니다. 따라서 Emacs를 사용하다 보면 폴더가 지저분해지는 현상이 발생합니다. 이러한 임시 파일을 한데 모아 이를 방지합니다. 공간이 부족할 경우 해당 폴더들 (backup, auto-save-list, savehist)의 내용물을 비워서 디스크 용량을 확보할 수 있습니다.
@@ -227,6 +269,13 @@ Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파
       '(kill-ring
         search-ring
         regexp-search-ring) ;; 추가적으로 저장할 히스토리 내역 설정)
+#+END_SRC
+
+** 기타 설정
+윈도우 환경에서, 가끔 왼쪽 윈도우키를 super 키로 인식하지 않는 경우가 있습니다. 이를 설정합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq w32-lwindow-modifier 'super)
 #+END_SRC
 
 * 패키지 설정
@@ -284,41 +333,267 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
   (setq org-emphasis-regexp-components '(" \t('\"{\x200B" "- \t.,:!?;'\")}\\[\x200B" " \t\r\n,\"'" "." 1))
 #+END_SRC
 
-org-mode는 기본적으로 많은 모듈을 포함하고 있으므로, 필요한 모듈만 포함시켜 실행 속도를 높입니다. 
+*** 모듈
 
-- 어떤 모듈이 있는지는 [[http://c20.kr/wiki/Org-mode#.EB.AA.A8.EB.93.88][다음]]을 참고하세요.
-- 참고: Sacha Chua
+ org-mode는 기본적으로 많은 모듈을 포함하고 있으므로, 필요한 모듈만 포함시켜 실행 속도를 높입니다. 
+
+ - 어떤 모듈이 있는지는 [[http://c20.kr/wiki/Org-mode#.EB.AA.A8.EB.93.88][다음]]을 참고하세요.
+ - 참고: Sacha Chua
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ ;; continue with :config
+   (setq org-modules `(org-bibtex
+                       org-docview
+                       org-drill
+                       org-info
+                       org-mouse
+                       org-annotate-fil
+                       org-eval
+                       org-toc
+                       org-panel
+                       org-screen
+                       org-collector))
+   (org-load-modules-maybe t)
+ #+END_SRC
+
+
+ 외부 모듈들은 use-package를 사용해 불러옵니다.
+
+ #+BEGIN_SRC emacs-lisp :tangle no
+ (use-package ox-mediawiki
+   :defer t
+   )
+ #+END_SRC
+
+ #+BEGIN_SRC emacs-lisp :tangle no
+ (use-package org-journal
+   :defer t
+   :config
+   (setq org-journal-dir "~/Dropbox/Texts/orgs/journal/")
+   )
+ #+END_SRC
+
+*** 출판
+ org-mode는 여러 형식으로 org 파일을 출판할 수 있게 합니다. 이 섹션에서는 관련한 설정을 정리합니다.
+
+우선 latex 관련 설정입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; latex에 export할 때 사용할 사용자 지정 class를 정의합니다.
+
+(add-to-list 'org-latex-classes
+          '("dissertation"
+             "\\documentclass[12pt]{report}"
+             ("\\chapter{%s}" . "\\chapter*{%s}")
+             ("\\section{%s}" . "\\section*{%s}")
+             ("\\subsection{%s}" . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+#+END_SRC
+
+** 시스템 관련
+
+*** auto-compile
+Emacs Lisp 컴파일러는 인간이 해독할 수 있는 소스 코드(.el) 파일을 바이트 컴파일(byte-compile, .elc) 파일로 변환하는 기능을 포함하고 있습니다. 유의해야 할 점은, 바이트 컴파일 파일 자체는 인터프리터가 해석하고 실행하며, 단지 사람이 아닌 기계가 해석할 수 있도록 변환한다는 것입니다. 따라서 바이트 컴파일은 일반적인 인터프리터보다는 빠르지만, 네이티브 컴파일보다는 느립니다. 자세한 사항은 [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Byte-Compilation.html][Emacs 메뉴얼]]을 참고하세요.
+
+Emacs에는 Lisp 라이브러리를 전부 바이트 컴파일시켜주는 [[https://github.com/emacscollective/auto-compile][패키지]]가 있으므로, 그것을 사용합니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-;; continue with :config
-  (setq org-modules `(org-bibtex
-                      org-docview
-                      org-drill
-                      org-info
-                      org-mouse
-                      org-annotate-fil
-                      org-eval
-                      org-toc
-                      org-panel
-                      org-screen
-                      org-collector))
-  (org-load-modules-maybe t)
+(use-package auto-compile
+  :config 
+  (auto-compile-on-load-mode)
+  (auto-compile-on-save-mode)
+  (setq load-prefer-newer t)) ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
 #+END_SRC
 
-외부 모듈들은 use-package를 사용해 불러옵니다.
+*** winner
+winner-mode는 윈도우 레이아웃 상태를 저장하고, 레이아웃 간의 undo / redo를 지원하는 모드입니다. 예컨대 윈도우를 세로로 분할해 다른 버퍼의 내용을 확인한 다음 =C-c <left>= 키를 눌러 되돌아갈 수 있습니다.
 
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package ox-mediawiki
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package winner
   :defer t
+  :config (winner-mode))
+#+END_SRC
+
+** 기타
+
+*** helm
+    [[https://github.com/emacs-helm/helm][Helm]]은 Emacs의 자동완성 기능을 확장시켜 주는 패키지입니다. 다양한 기능을 제공하고 있지만, 그 반대급부로 구동이 무거워지는 단점이 있어서 많은 사람들은 Ivy 등의 대안을 선택하기도 합니다(참고: [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][From helm, to ivy]], [[http://blog.binchen.org/posts/hello-ivy-mode-bye-helm.html][Hello Ivy-mode, bye Helm]] 등).
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm
+  :diminish helm-mode
+  :config
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100) ;; 자동완성 후보 숫자를 제한해 속도를 높입니다.
+
+    ;; 검색 결과의 업데이트 속도를 더 빠르게 합니다.
+    ;; 참고: https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                        ; reeeelatively quickly.
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+    (helm-mode))
+  :bind (("M-x" . helm-M-x)
+	 ("C-c h" . helm-mini)
+	 ("C-x b" . helm-buffers-list)
+	 ("C-h a" . helm-apropos)
+	 ("C-x C-f" . helm-find-files)
+	 ("C-x c o" . helm-occur)
+	 
+	 ))
+#+END_SRC
+
+*** miniedit
+[[https://github.com/emacsorphanage/miniedit][miniedit]] 패키지는 미니버퍼의 편집을 더 빠르게 할 수 있도록 합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package miniedit
+  :commands minibuffer-edit
+  :init (miniedit-install))
+#+END_SRC
+
+*** undo-tree
+undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보여주는 패키지입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
+#+END_SRC
+
+*** guide-key
+[[https://github.com/kai2nenobu/guide-key][guide-key]]는 복잡한 키 바인딩을 다 외울 필요 없이, 특정 조합의 키를 누르면 그에 해당하는 바인딩의 목록을 나타냅니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package guide-key
+  :defer t
+  :diminish guide-key-mode
+  :config
+  (progn
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
+  (guide-key-mode 1)))  ; Enable guide-key-mode
+#+END_SRC 
+
+*** deft
+[[https://github.com/jrblevin/deft][Deft]]는 텍스트 파일들을 쉽게 탐색하고, 읽고, 작성할 수 있도록 도와주는 패키지입니다. [[http://notational.net/][Notational Velocity]]와 비슷한 역할을 한다고 이해하면 될 것입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package deft
+  :bind ("<f8>" . deft)
+  :commands (deft)
+  :config
+  (setq deft-extensions '("txt" "org" "md")
+        deft-directory "~/Dropbox/Texts"
+        deft-recursive t ; indexing subdirectories
+        deft-use-filename-as-title t))
+#+END_SRC
+
+*** magit
+magit은 Emacs 상에서 Git 파일을 관리하는 솔루션입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package magit
+  :defer 2
   )
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package org-journal
+*** writeroom-mode
+Emacs를 전체화면으로 표시하고, 불필요한 요소들은 숨겨서 글쓰기에 집중할 수 있도록 하는 모드입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package writeroom-mode
+  )
+#+END_SRC
+
+*** mediawiki
+
+#+BEGIN_SRC emacs-lisp :tangle
+(use-package mediawiki
+  :ensure t
+  :defer 2
+  )
+#+END_SRC
+
+*** markdown-mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown")) ;; 기본적인 마크다운 렌더링 엔진으로 multimarkdown을 설정합니다.
+#+END_SRC
+
+*** smartparens
+괄호를 자동완성시키는 기능을 제공합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package smartparens
+  :config
+  (progn
+    (require 'smartparens-config))) ;; 기본 설정. M-x smartparens-mode를 통해서 언제든지 실해할 수 있습니다.
+#+END_SRC
+
+*** php-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package php-mode
+  :defer t)
+#+END_SRC
+
+*** pdf-tools
+Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니다. 외부 라이브러리의 설치를 필요로 합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package pdf-tools
   :defer t
   :config
-  (setq org-journal-dir "~/Dropbox/Texts/orgs/journal/")
+  (pdf-tools-install)
+  (cond ;;; OS check: setting epdfinfo setting depends on OS
+   ((eq system-type 'windows-nt)
+    (setenv "PATH" (concat "C:\\msys64\\mingw64\\bin;" (getenv "PATH"))))
+   )
   )
 #+END_SRC
 
-** 
+*** wc-mode
+wc-mode는 모드 라인에 단어수를 표시하는 패키지입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package wc-mode
+  :config
+  (setq wc-modeline-format
+	(concat "[%tw" (if wc-word-goal "/%gw") "w %tc" (if wc-char-goal "/%gc") "c]"))
+  :bind ("C-c w" . wc-mode)) 
+#+END_SRC
+
+** 꾸미기
+
+*** 테마
+현재 설정에서  선택 가능한 테마는 gruvbox입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package gruvbox-theme
+  :config
+  (load-theme 'gruvbox t))
+#+END_SRC
+
+*** smart-mode-line
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package smart-mode-line
+  :init
+  (use-package smart-mode-line-powerline-theme)
+  :config
+  (setq sml/theme 'dark)
+  (sml/setup)
+  (select-kr-font "c"))
+#+END_SRC

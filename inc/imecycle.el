@@ -17,7 +17,7 @@
 (global-set-key [?\S- ] 'usr-input-method-toggle)
 
 ;; define IME index
-(defvar usr-input-method--index 1 "Index of input method. Default: 2벌식.")
+(defvar usr-input-method--index 0 "Index of input method. Default: 2벌식.")
 
 (defun usr-input-index-cycle (&optional skip)
   "Update `use-input-method-inex' by adding SKIP (default 1) and

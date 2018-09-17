@@ -1,0 +1,659 @@
+#+TITLE: GNU Emacs Configuration for Korean
+#+AUTHOR: Sungbin Jeon
+#+DATE: 2018-06-02
+
+* 개요
+
+이 설정파일은 GNU Emacs를 빠르고 쉽게 사용하기 위하여 작성되었습니다. 
+
+Emacs는 매우 강력하고 훌륭한 프로그램이지만, 그 방대함은 사용자로 하여금 쉽게 길을 잃게 만듭니다. 따라서 인터넷에 공개된 수많은 Emacs 설정 파일은 그 헤메임의 기록이며, 사람들로 하여금 이정표 역할을 해줍니다. 이 파일도 그 기록 중 하나입니다.
+
+특별히, 이 파일의 설명은 한국어로 쓰여졌습니다. 이는 공개된 Emacs 설정에 대한 정보를 찾아다니던 중, 한국어로 되어 있는 것이 거의 없으므로 발생하는 어려움에 대한 대응입니다. 물론 Emacs를 사용하는 많은 사람들은 영어로 정보를 습득하는 데 어려움이 없긴 할 것이나, 한편으로는 언어적 장벽이 주는 저변 확대는 무시할 수 없습니다. 더욱이, Emacs는 굳이 프로그래머가 아니더라도 글쓰는 사람들에게 좋은 도구가 되어줍니다. [[http://orgmode.org][org-mode]]를 사용한 정리된 글쓰기, [[https://jblevins.org/projects/deft/][Deft]]의 강력한 파일 관리 기능, 혹은 Emacs 내부에 포함된 여러 기능들은 단지 프로그래머가 아니라 일상적으로 컴퓨터 앞에 앉는 모든 사람들에게 도움이 됩니다. 이 설정파일은, 그러한 사람들에게 도움이 되는 것을 의도하고 있습니다.
+
+** 목표
+
+이 설정파일은 다음 사항을 목표로 작성됩니다.
+
+1. 한국어 사용자: Emacs는 자체적인 IME를 포함하고 있으며, 매우 훌륭하게 작동합니다. 그러나 바닐라 상태에서 한국어 사용에는 다소 어려움이 있으며, 편리하게 쓰기 위해서는 몇 가지 설정이 필요합니다.
+2. 속도: 많은 모던한 에디터들은 종종 많은 패키지를 설치했을 때 실행 속도의 희생을 가져오곤 합니다. Emacs도 그러한 위험성을 내포합니다. 특히 Emacs에서 파생된 [[http://spacemacs.org/][Spacemacs]] 같은 경우에도, 많은 레이어들을 추가하면 금새 프로그램이 느려지고 꼬이게 됩니다. 바닐라 상태의 Emacs는 상당히 빠르고, 따라서 Emacs의 실행 속도를 확보하기 위한 여러 팁들이 공개되어 있습니다. 이 설정파일도 그러한 팁들을 적극적으로 반영합니다.
+3. 기능성: Emacs는 다양한 기능들이 있으며, 각자 필요한 기능들에 맞게 조합하는 방식으로 설정을 이루게 됩니다. 이 설정파일은 다소의 주관적인 사용 패턴이 반영되긴 했지만, 많은 사용자들이 공통적으로 사용하는 기능과 패키지들을 포함합니다. 또한, 얼마든지 원하는 패키지들을 추가해서 사용할 수 있도록 하였습니다.
+4. 투명성: 이 설정파일은 가능한 상세한 설명을 명시해 놓는 것을 원칙으로 합니다. 굳이 org 파일로 작성하는 이유도 여기에 있습니다. 이를 통해, 처음 이 파일을 읽는 사람들도(org 파일은 GitHub에서 렌더링되므로 편하게 읽을 수 있습니다) Emacs의 작동 원리에 대해 어느 정도 개괄할 수 있도록 의도하였습니다.
+
+** 참고
+
+이 설정파일은 여러 곳에서 정보를 모아 쓰여졌습니다. 부분적인 코드의 출처는 각자 명시할 것입니다. 주요하게 참고한 설정들은 다음과 같습니다.
+
+- [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]]: Sacha Chua's Emacs Configuration
+- [[https://github.com/rememberYou/.emacs.d][Terencio Agozzino]]: GNU Emacs Configuration
+
+Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합니다. 다만 부분적인 정보만 담고 있다는 한계는 있습니다.
+
+- [[https://medium.com/happyprogrammer-in-jeju/%EC%84%A0%EB%A7%9D%EC%9D%98-%EC%97%90%EB%94%94%ED%84%B0-%EC%9D%B4%EB%A7%A5%EC%8A%A4-emacs-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-2c412b27ee8d][김대현]]: 선망의 에디터, 이맥스(Emacs) 시작하기
+- [[https://wiki.kldp.org/KoreanDoc/html/Emacs-KLDP/Emacs-KLDP.html][이휘재]]: Emacs 소개
+- [[http://c20.kr/wiki/Emacs][전성빈]]: Emacs에 대한 정보 및 번역 모음
+
+** 개발
+
+이 설정파일은 실제로 사용되고 있는 것이므로, 지속적으로 수정되고 기능이 추가되며 갱신될 것입니다. 갱신 내역은 커밋 내역에 적히며, 중요한 개선사항은 이 파일에도 명시됩니다. 기능의 추가는 상기한 목표를 헤치지 않는 선에서 이루어집니다.
+
+설정파일을 사용하는 과정에서 발생하는 오류나 개선사항은 <clockoon@gmail.com> 또는 저장소의 issue에 알려주시기 바랍니다.
+
+*** 내역
+
+- 2018-06-02: 기존에 사용하던 설정 파일을 org 파일로 정리
+
+
+* 기본 설정
+
+** 외부 파일
+
+설정을 불러오면서 사용하게 될 외부 설정 파일에 대해 정의합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; 개인적인 변수나 값은 "private.el" 파일에 저장합니다. 필요할 경우 여기에 변수를 입력하세요.
+(if (file-exists-p (expand-file-name "private.el" user-emacs-directory))
+    (load-file (expand-file-name "private.el" user-emacs-directory)))
+
+;; Emacs상에서 수정한 사항은 'custom.el' 파일에 저장해 소스 파일을 건드리지 않도록 합니다.
+(load (expand-file-name "custom.el" user-emacs-directory) :noerror)
+#+END_SRC
+
+** (기본) 패키지 설정
+
+우선 패키지를 초기화하고, 설정에 필요한 저장소를 추가합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
+(setq package--init-file-ensured 't)
+(package-initialize) ;; 패키지 초기화
+
+;; 패키지 저장소 추가
+;; 저장소: MELPA, ORG-MODE, user42
+(when (not (assoc-default "melpa" package-archives))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+(when (not (assoc-default "org" package-archives))
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
+(when (not (assoc-default "user42" package-archives))
+  (add-to-list 'package-archives '("user42" . "https://download.tuxfamily.org/user42/elpa/packages/") t))
+#+END_SRC
+ 
+이 설정파일에서는 [[https://github.com/jwiegley/use-package][use-package]]를 사용해 패키지를 관리합니다. 기본적인 방식에 비해 use-package는 더 강력하고 효율적이며 빠르게 패키지를 관리할 수 있습니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (설치되어 있지 않을 경우) use-package 설치
+(when (not (package-installed-p 'use-package))
+  (condition-case nil
+      (package-install 'use-package)
+    (error
+     (package-refresh-contents)
+     (package-install 'use-package))))
+
+(setq use-package-verbose t) ;; 로딩이 느린 패키지의 경우 *Messages* 버퍼에 출력합니다.
+(setq use-package-always-ensure t) ;; 패키지가 설치되어 있는지 확인 후 없으면 다운받습니다.
+#+END_SRC
+
+** 한국어 설정
+
+Emacs는 기본적으로 한국어 사용을 위한 설정이 되어있지 않습니다. 우선, 한국어/유니코드로 프로그램 환경과 로케일을 맞춥니다.
+
+참고:
+1. http://wiki.nacyot.com/documents/emacs/#.WVyTxGSPJhE
+2. https://stackoverflow.com/questions/2901541/which-coding-system-should-i-use-in-emacs
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Emacs는 기본으로 CJK (한중일) 문자를 인코딩하지만, 이로 인해 유니코드 환경에서는 문제가 발생합니다. 이 옵션은 꺼주는 것이 좋습니다.
+(setq utf-translate-cjk-mode nil) 
+
+;; UTF-8 설정 모음
+(set-language-environment 'utf-8)
+(set-keyboard-coding-system 'utf-8-mac) ;; For old Carbon emacs on OS X only
+(setq locale-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+;; 윈도우 환경에서는 모든 텍스트가 UTF-8로 인코딩되지 않으므로, 클립보드 인코딩을 UTF-8로 하지 않습니다.
+(unless (eq system-type 'windows-nt)
+  (set-selection-coding-system 'utf-8))
+(prefer-coding-system 'utf-8)
+
+;; 시간 표시 형식은 영어로 표시해서 호환성을 높입니다.
+(setq system-time-locale "C")
+#+END_SRC
+
+Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태에서는 OS 내장 IME와 충돌하는 문제가 있습니다. 따라서 기본적인 IME - 한글, 영어, 일본어 - 를 선택하여 쉽게 전환할 수 있는 함수를 내장합니다.
+
+참고:
+1. https://kldp.org/node/109184
+2. https://stackoverflow.com/questions/34505209/lisp-cycle-through-functions/34505716#34505716
+
+- OSX의 경우, 구름 등의 커스텀 입력기를 사용할 경우 Emacs와 충돌하는 경우가 있습니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; IME 목록: 2벌식, 3벌식(390 / 391), 일본어
+;; 다른 언어를 추가하는 것도 가능합니다.
+(defvar *usr-input-method-list* 
+  '("korean-hangul"
+   "korean-hangul390"
+   "korean-hangul3f"
+   "japanese"))
+(setq default-input-method "korean-hangul") ;; 2벌식을 기본 입력 방식으로 설정
+
+;; 단축키 설정:
+;; Ctrl + \ 키를 누르면 IME 간의 전환을 수행합니다.
+;; Shift + Space 키를 누르면 IME와 영어 간의 전환을 수행합니다.
+(global-set-key [?\C-\\] 'my/usr-input-index-cycle)
+(global-set-key [?\S- ] 'my/usr-input-method-toggle)
+
+;; 현재 IME 상태 변수 설정
+(defvar *usr-input-method--index* 0 "Index of current input method. Default: 2벌식.")
+
+;; IME 간의 전환 함수
+(defun my/usr-input-index-cycle (&optional skip)
+  "Update `*use-input-method-inex*' by adding SKIP (default 0) and
+wrapping if necessary, then call the function at this index in
+`use-input-ethod-list'."
+  (interactive)
+  (setq *usr-input-method--index* (+ *usr-input-method--index* (or skip 1)))
+  ;; BUG: skips with an absolute value bigger than 1 don't wrap properly.
+  (if (>= *usr-input-method--index* (length *usr-input-method-list*))
+      (setq *usr-input-method--index* 0)
+    (when (< *usr-input-method--index* 0)
+      (setq *usr-input-method--index* (1- (length *usr-input-method-list*))) ))
+  (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
+  (message "Current IME: %S" (nth *usr-input-method--index* *usr-input-method-list*)) )
+
+;; IME - 영어 간의 전환 함수
+(defun my/usr-input-method-toggle ()
+  (interactive)
+  (if (eq current-input-method nil)
+      (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
+    (set-input-method nil)) )
+#+END_SRC
+
+** 에디터 설정
+
+가독성을 위해 전역적으로 줄바꿈이 이루어지도록 설정합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-visual-line-mode t)
+#+END_SRC
+
+모드 라인에 =2018-06-03 16:06= 형식으로 시간을 표시합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq display-time-format "[%Y-%m-%d %H:%M]")
+(display-time-mode 1)
+#+END_SRC
+
+모든 문장이 단일 공백으로 끝을 맺도록 설정합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq sentence-end-double-space nil)
+#+END_SRC
+
+Emacs는 yes / no, y / n 중 하나의 방식을 사용해 명령의 실행 여부를 입력하도록 합니다. 이는 개발자가 임의로 설정한 것이지만, IME가 한글로 설정되어 있는 경우에는 yes든 y든 입력되지 않는 사태가 발생합니다. 따라서 quick-yes 패키지를 사용해 M-y, M-n 키에 각각 yes와 no를 할당합니다.
+
+참고: 
+- http://user42.tuxfamily.org/quick-yes/index.html
+
+#+BEGIN_SRC 
+(use-package quick-yes)
+#+END_SRC
+
+** 폰트 설정
+운영체제와 DPI 에 맞추어, 자동으로 텍스트 크기를 조정하는 함수를 설정합니다. 기본적인 폰트는 D2Coding이며, 가독성을 위해 기본 폰트보다 크게 설정되어 있습니다. 더 많은 텍스트를 화면에 표시하고 싶다면 =x-font-height= 값을 조절하면 됩니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; select fonts
+;;; refs: [1] https://github.com/syl20bnr/spacemacs/issues/9445
+;;;       [2] https://emacs.stackexchange.com/questions/28390/quickly-adjusting-text-to-dpi-changes
+(defun my/select-kr-font (opt)
+  "화면의 해상도와 dpi에 맞게 폰트 크기를 조절합니다."
+  (when window-system
+    (let* ((attrs (car (display-monitor-attributes-list)))
+         (size (assoc 'mm-size attrs))
+         (sizex (cadr size))
+         (res (cdr (assoc 'geometry attrs)))
+         (resx (- (cadr (cdr res)) (car res)))
+         (dpi (* (/ (float resx) sizex) 25.4)))
+    (cond
+     ((< dpi 110)
+      (setq x-font-height 16))
+     ((< dpi 130)
+      (setq x-font-height 18))
+     ((< dpi 160)
+      (setq x-font-height 20))
+      (t (setq x-font-height 22)))))
+	 
+;   (if (> (x-display-pixel-width) 1600)
+;	(setq x-font-height 16)
+;      (setq x-font-height 12)))
+  (cond
+   ((string= opt "c") ;; "c" means "codding"
+    (set-face-attribute 'default nil :font
+			(format "%s:pixelsize=%d" "D2Coding" x-font-height)))
+   ((string= opt "s") ;; "s" means serif
+      (set-face-attribute 'default nil :font
+			(format "%s:pixelsize=%d" "Noto Serif KR" (- x-font-height 2))))
+   ((string= opt "ss") ;; "ss" means san-serif
+   (set-face-attribute 'default nil :font
+			(format "%s:pixelsize=%d" "Noto Sans CJK KR" (- x-font-height 2))))
+   )
+   (set-face-attribute 'mode-line nil :font
+			(format "%s:pixelsize=%d" "D2Coding" (- x-font-height 1))))
+#+END_SRC
+
+** 백업/자동저장/히스토리
+
+Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파일과 동일한 폴더에 저장합니다. 따라서 Emacs를 사용하다 보면 폴더가 지저분해지는 현상이 발생합니다. 이러한 임시 파일을 한데 모아 이를 방지합니다. 공간이 부족할 경우 해당 폴더들 (backup, auto-save-list, savehist)의 내용물을 비워서 디스크 용량을 확보할 수 있습니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; 백업 디렉토리
+(setq backup-directory-alist `((".*" . ,(concat user-emacs-directory "backup/"))))
+
+;; 백업 / 버전관리 설정
+(setq version-control t ;; enable VC
+      vc-make-backup-files t ;; generate backup files
+      kept-old-versions 0 ;; do not keep oldest versions 
+      ketp-new-versions 10 ;; keep many newest versions
+      delete-old-versions t) ;; automatically delete outdated backups
+
+;; 자동저장 디렉토리
+(setq auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "auto-save-list/") t)))
+
+;; 히스토리 설정
+(savehist-mode 1)
+(setq savehist-file (concat user-emacs-directory "savehist")) ;; 히스토리 파일
+(setq history-length t) ;; 전체 히스토리 저장
+(setq history-delete-duplicates t) ;; 중복된 히스토리 내역은 제거
+(setq savehist-save-minibuffer-history 1) ;; 미니버퍼 히스토리 저장
+(setq savehist-additional-variables 
+      '(kill-ring
+        search-ring
+        regexp-search-ring)) ;; 추가적으로 저장할 히스토리 내역 설정
+#+END_SRC
+
+** 기타 설정
+윈도우 환경에서, 가끔 왼쪽 윈도우키를 super 키로 인식하지 않는 경우가 있습니다. 이를 설정합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq w32-lwindow-modifier 'super)
+#+END_SRC
+
+* 패키지 설정
+
+이 섹션에서는 패키지들을 설치하거나 설정합니다. 패키지의 효율적인 관리를 위해 [[https://github.com/jwiegley/use-package][use-packag]]e를 사용합니다. 또한, .org 형식의 파일을 읽어들이기 위해 org-mode도 설치되었다고 가정합니다. 처음 이 설정파일을 적용하면, =freshstart.el= 파일을 실행해 org-mode를 설치하도록 합니다.
+
+** use-package
+
+가장 기본적으로 필요한 use-package를 설치합니다.
+
+참고:
+1. https://github.com/jwiegley/use-package
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; 설치 여부를 확인하고 없을 경우 설치합니다.
+;; use-package는 따로 require를 하지 않아도 설치만으로 실행할 수 있습니다.
+(when (not (package-installed-p 'use-package))
+  (condition-case nil
+      (package-install 'use-package)
+    (error
+     (package-refresh-contents)
+     (package-install 'use-package))))
+
+;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
+(setq use-package-verbose t) 
+;; use-package에서 불러오는 패키지가 설치되었는지 항상 확인하고, 설치되어 있지 않으면 자동으로 다운받아 설치합니다.
+(setq use-package-always-ensure t)
+#+END_SRC
+
+*** 기본 명령어
+아래 코드들에 포함된 옵션들에 대한 간단한 설명입니다.
+
+- =:defer=: Emacs 로드 시 동시에 실행하는 것이 아니라, 필요할 때에만 로드하도록 하여 초기 기동 시간을 절약합니다.
+
+** org
+
+org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외에도 수많은 기능을 수행할 수 있습니다. 블로그를 작성하는 데에도, 노트를 작성하는 데에도, 스케쥴을 관리하는 데에도, 할일을 정리하는 데에도 쓸 수 있습니다.
+
+앞에서 썼듯이 org-mode는 초기에 이미 설치되어 있습니다. 따라서 여기서는 이에 대한 설정만을 진행합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package org
+  :defer t
+  :config
+  ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
+  (setq org-support-shift-select t) 
+  ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책이며, 이를 부분적으로 구현하기 위해, 유니코드 문자 중에 '보이지 않는 스페이스'를 사용하여 편법으로 부분 강조를 가능하게 합니다.
+  ;; 참고: https://emacs.stackexchange.com/questions/18499/mark-up-only-part-of-a-word/18511
+  (defun my/insert-zero-width-space ()
+    (interactive)
+    (insert-char #x200b))
+  ;; Ctrl + * 를 누르면 강조문자 앞뒤에 해당 문자를 넣을 수 있습니다.
+  (define-key org-mode-map (kbd "C-*") 'my/insert-zero-width-space)
+  ;; 해당 문자를 스페이스와 같은 취급을 하도록 설정을 바꿔줍니다.
+  (setq org-emphasis-regexp-components '(" \t('\"{\x200B" "- \t.,:!?;'\")}\\[\x200B" " \t\r\n,\"'" "." 1))
+#+END_SRC
+
+*** 모듈
+
+ org-mode는 기본적으로 많은 모듈을 포함하고 있으므로, 필요한 모듈만 포함시켜 실행 속도를 높입니다. 
+
+ - 어떤 모듈이 있는지는 [[http://c20.kr/wiki/Org-mode#.EB.AA.A8.EB.93.88][다음]]을 참고하세요.
+ - 참고: Sacha Chua
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ ;; continue with :config
+   (setq org-modules `(org-bibtex
+                       org-docview
+                       org-drill
+                       org-info
+                       org-mouse
+                       org-annotate-fil
+                       org-eval
+                       org-toc
+                       org-panel
+                       org-screen
+                       org-collector))
+   (org-load-modules-maybe t))
+ #+END_SRC
+
+
+ 외부 모듈들은 use-package를 사용해 불러옵니다.
+
+ #+BEGIN_SRC emacs-lisp :tangle no
+ (use-package ox-mediawiki
+   :defer t
+   )
+ #+END_SRC
+
+ #+BEGIN_SRC emacs-lisp :tangle no
+ (use-package org-journal
+   :defer t
+   :config
+   (setq org-journal-dir "~/Dropbox/Texts/orgs/journal/")
+   )
+ #+END_SRC
+
+*** 출판
+ org-mode는 여러 형식으로 org 파일을 출판할 수 있게 합니다. 이 섹션에서는 관련한 설정을 정리합니다.
+
+우선 latex 관련 설정입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; latex에 export할 때 사용할 사용자 지정 class를 정의합니다.
+
+(add-to-list 'org-latex-classes
+          '("dissertation"
+             "\\documentclass[12pt]{report}"
+             ("\\chapter{%s}" . "\\chapter*{%s}")
+             ("\\section{%s}" . "\\section*{%s}")
+             ("\\subsection{%s}" . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+#+END_SRC
+
+** 시스템 관련
+
+*** auto-compile
+Emacs Lisp 컴파일러는 인간이 해독할 수 있는 소스 코드(.el) 파일을 바이트 컴파일(byte-compile, .elc) 파일로 변환하는 기능을 포함하고 있습니다. 유의해야 할 점은, 바이트 컴파일 파일 자체는 인터프리터가 해석하고 실행하며, 단지 사람이 아닌 기계가 해석할 수 있도록 변환한다는 것입니다. 따라서 바이트 컴파일은 일반적인 인터프리터보다는 빠르지만, 네이티브 컴파일보다는 느립니다. 자세한 사항은 [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Byte-Compilation.html][Emacs 메뉴얼]]을 참고하세요.
+
+Emacs에는 Lisp 라이브러리를 전부 바이트 컴파일시켜주는 [[https://github.com/emacscollective/auto-compile][패키지]]가 있으므로, 그것을 사용합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package auto-compile
+  :config 
+  (auto-compile-on-load-mode)
+  (auto-compile-on-save-mode)
+  (setq load-prefer-newer t)) ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
+#+END_SRC
+
+*** winner
+winner-mode는 윈도우 레이아웃 상태를 저장하고, 레이아웃 간의 undo / redo를 지원하는 모드입니다. 예컨대 윈도우를 세로로 분할해 다른 버퍼의 내용을 확인한 다음 =C-c <left>= 키를 눌러 되돌아갈 수 있습니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package winner
+  :defer t
+  :config (winner-mode))
+#+END_SRC
+** helm
+
+   [[https://github.com/emacs-helm/helm][Helm]]은 Emacs의 자동완성 기능을 확장시켜 주는 패키지입니다. 다양한 기능을 제공하고 있지만, 그 반대급부로 구동이 무거워지는 단점이 있어서 많은 사람들은 Ivy 등의 대안을 선택하기도 합니다(참고: [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][From helm, to ivy]], [[http://blog.binchen.org/posts/hello-ivy-mode-bye-helm.html][Hello Ivy-mode, bye Helm]] 등).
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm
+  :diminish helm-mode
+  :config
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100) ;; 자동완성 후보 숫자를 제한해 속도를 높입니다.
+
+    ;; 검색 결과의 업데이트 속도를 더 빠르게 합니다.
+    ;; 참고: https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ;; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ;; this actually updates things
+                                      ;; reeeelatively quickly.
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+    (helm-mode))
+  :bind (("M-x" . helm-M-x)
+	 ("C-c h" . helm-mini)
+	 ("C-x b" . helm-buffers-list)
+	 ("C-h a" . helm-apropos)
+	 ("C-x C-f" . helm-find-files)
+	 ("C-x c o" . helm-occur)
+	 
+	 ))
+#+END_SRC
+
+
+** magit
+magit은 Emacs 상에서 Git 파일을 관리하는 솔루션입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package magit
+  :defer 2
+  )
+#+END_SRC
+
+** 기타
+
+*** miniedit
+[[https://github.com/emacsorphanage/miniedit][miniedit]] 패키지는 미니버퍼의 편집을 더 빠르게 할 수 있도록 합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package miniedit
+  :commands minibuffer-edit
+  :init (miniedit-install))
+#+END_SRC
+
+*** undo-tree
+undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보여주는 패키지입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (global-undo-tree-mode 1) ;; 모든 버퍼에서 실행 가능하도록
+    ;; undo-redo 단축키 설정
+    (defalias 'redo 'undo-tree-redo)
+    (cond
+      ((eq system-type 'darwin)
+       (global-set-key (kbd "s-z") 'undo)
+       (global-set-key (kbd "s-S-z") 'redo))
+      (
+       (global-set-key (kbd "C-z") 'undo)
+       (global-set-key (kbd "C-S-z") 'redo)))
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
+#+END_SRC
+
+*** guide-key
+[[https://github.com/kai2nenobu/guide-key][guide-key]]는 복잡한 키 바인딩을 다 외울 필요 없이, 특정 조합의 키를 누르면 그에 해당하는 바인딩의 목록을 나타냅니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package guide-key
+  :defer t
+  :diminish guide-key-mode
+  :config
+  (progn
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
+  (guide-key-mode 1)))  ; Enable guide-key-mode
+#+END_SRC 
+
+*** deft
+[[https://github.com/jrblevin/deft][Deft]]는 텍스트 파일들을 쉽게 탐색하고, 읽고, 작성할 수 있도록 도와주는 패키지입니다. [[http://notational.net/][Notational Velocity]]와 비슷한 역할을 한다고 이해하면 될 것입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package deft
+  :bind ("<f8>" . deft)
+  :commands (deft)
+  :config
+  (setq deft-extensions '("txt" "org" "md")
+        deft-directory "~/Dropbox/Texts"
+        deft-recursive t ; indexing subdirectories
+        deft-use-filename-as-title t))
+#+END_SRC
+
+*** writeroom-mode
+Emacs를 전체화면으로 표시하고, 불필요한 요소들은 숨겨서 글쓰기에 집중할 수 있도록 하는 모드입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package writeroom-mode
+  )
+#+END_SRC
+
+*** mediawiki
+
+#+BEGIN_SRC emacs-lisp :tangle
+(use-package mediawiki
+  :ensure t
+  :defer 2
+  )
+#+END_SRC
+
+*** markdown-mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown")) ;; 기본적인 마크다운 렌더링 엔진으로 multimarkdown을 설정합니다.
+#+END_SRC
+
+*** smartparens
+괄호를 자동완성시키는 기능을 제공합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package smartparens
+  :config
+  (progn
+    (require 'smartparens-config))) ;; 기본 설정. M-x smartparens-mode를 통해서 언제든지 실해할 수 있습니다.
+#+END_SRC
+
+*** php-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package php-mode
+  :defer t)
+#+END_SRC
+
+*** pdf-tools
+Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니다. 외부 라이브러리의 설치를 필요로 합니다. 다만, 설정에 번거로운 부분이 있기 때문에 기본적인 설정의 경우 안정화될 때까지는 구현만 해놓고 실제로 설치하지는 않습니다. 설치를 원하면 org 소스 파일의 =:tangle no= 부분을 =:tangle yes= 로 수정하면 됩니다.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package pdf-tools
+  :defer t
+  :config
+  (pdf-tools-install)
+  (cond ;;; OS check: setting epdfinfo setting depends on OS
+   ((eq system-type 'windows-nt)
+    (setenv "PATH" (concat "C:\\msys64\\mingw64\\bin;" (getenv "PATH"))))
+   )
+  )
+#+END_SRC
+
+*** wc-mode
+wc-mode는 모드 라인에 단어수를 표시하는 패키지입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package wc-mode
+  :config
+  (setq wc-modeline-format
+	(concat "[%tw" (if wc-word-goal "/%gw") "w %tc" (if wc-char-goal "/%gc") "c]"))
+  :bind ("C-c w" . wc-mode)) 
+#+END_SRC
+
+** 꾸미기
+
+*** 테마
+현재 설정에서  선택 가능한 테마는 gruvbox입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package gruvbox-theme
+  :config
+  (load-theme 'gruvbox t))
+#+END_SRC
+
+*** smart-mode-line
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package smart-mode-line
+  :init
+  (use-package smart-mode-line-powerline-theme)
+  :config
+  (setq sml/theme 'dark)
+  (sml/setup)
+  (my/select-kr-font "c"))
+#+END_SRC
+
+* 동기화
+
+마치 바이트 컴파일처럼, org 파일(그러니까 현재 파일)을 바로 읽어들이는 것보다는 포함된 소스 코드를 따로 정리해 로드하는 것이 더 실행속도가 빠릅니다. 이를 위해, 다음과 같이 async 패키지를 사용해 org 파일을 변경할 때마다 config.el 파일을 업데이트합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package async)
+
+(defvar *config-file* (expand-file-name "config.org" user-emacs-directory)
+  "설정을 기록한 org 파일입니다.")
+
+(defvar *config-last-change* (nth 5 (file-attributes *config-file*))
+  "가장 최근에 설정을 변경한 시간입니다.")
+
+(defvar *show-async-tangle-results* nil
+  "비동기 작업 버퍼를 보존해 이후에도 쓸 수 있도록 합니다.")
+
+(defun my/config-updated ()
+  "마지막으로 업데이트한 시간 이후에 설정 파일이 변경되었는지 확인합니다."
+  (time-less-p *config-last-change*
+               (nth 5 (file-attributes *config-file*))))
+
+(defun my/config-tangle ()
+  "org 파일을 비동기적으로 변환합니다."
+  (when (my/config-updated)
+    (setq *config-last-change*
+          (nth 5 (file-attributes *config-file*)))
+    (my/async-babel-tangle *config-file*)))
+
+(defun my/async-babel-tangle (org-file)
+  "org 파일을 비동기적으로 변환합니다."
+  (let ((init-tangle-start-time (current-time))
+        (file (buffer-file-name))
+        (async-quiet-switch "-q"))
+    (async-start
+     `(lambda ()
+        (require 'org)
+        (org-babel-tangle-file ,org-file))
+     (unless *show-async-tangle-results*
+       `(lambda (result)
+          (if result
+              (message "성공: %s을(를) 성공적으로 변환했습니다 (%.2fs)."
+                       ,org-file
+                       (float-time (time-subtract (current-time)
+                                                  ',init-tangle-start-time)))
+            (message "오류: %s을(를) 변환하는 데 실패했습니다." ,org-file)))))))
+
+(add-hook 'after-save-hook 'my/config-tangle) ;; 파일을 저장하면 파일을 변환하도록 지정합니다.
+#+END_SRC

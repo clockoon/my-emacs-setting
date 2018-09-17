@@ -7,3 +7,5 @@ elpa/*
 *.DS_Store
 /url/
 /kkcrc
+/config.html
+config.el

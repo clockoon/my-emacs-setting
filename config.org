@@ -52,7 +52,7 @@ Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합�
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; 개인적인 변수나 값은 "private.el" 파일에 저장합니다. 필요할 경우 여기에 변수를 입력하세요.
 (if (file-exists-p (expand-file-name "private.el" user-emacs-directory))
-    (load-file (expand-file-name "private.el" user-emacs-directory))
+    (load-file (expand-file-name "private.el" user-emacs-directory)))
 
 ;; Emacs상에서 수정한 사항은 'custom.el' 파일에 저장해 소스 파일을 건드리지 않도록 합니다.
 (load (expand-file-name "custom.el" user-emacs-directory) :noerror)
@@ -130,7 +130,7 @@ Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태�
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; IME 목록: 2벌식, 3벌식(390 / 391), 일본어
 ;; 다른 언어를 추가하는 것도 가능합니다.
-(defvar usr-input-method-list 
+(defvar *usr-input-method-list* 
   '("korean-hangul"
    "korean-hangul390"
    "korean-hangul3f"
@@ -140,32 +140,32 @@ Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태�
 ;; 단축키 설정:
 ;; Ctrl + \ 키를 누르면 IME 간의 전환을 수행합니다.
 ;; Shift + Space 키를 누르면 IME와 영어 간의 전환을 수행합니다.
-(global-set-key [?\C-\\] 'usr-input-index-cycle)
-(global-set-key [?\S- ] 'usr-input-method-toggle)
+(global-set-key [?\C-\\] 'my/usr-input-index-cycle)
+(global-set-key [?\S- ] 'my/usr-input-method-toggle)
 
 ;; 현재 IME 상태 변수 설정
-(defvar usr-input-method--index 0 "Index of current input method. Default: 2벌식.")
+(defvar *usr-input-method--index* 0 "Index of current input method. Default: 2벌식.")
 
 ;; IME 간의 전환 함수
-(defun usr-input-index-cycle (&optional skip)
-  "Update `use-input-method-inex' by adding SKIP (default 0) and
+(defun my/usr-input-index-cycle (&optional skip)
+  "Update `*use-input-method-inex*' by adding SKIP (default 0) and
 wrapping if necessary, then call the function at this index in
 `use-input-ethod-list'."
   (interactive)
-  (setq usr-input-method--index (+ usr-input-method--index (or skip 1)))
+  (setq *usr-input-method--index* (+ *usr-input-method--index* (or skip 1)))
   ;; BUG: skips with an absolute value bigger than 1 don't wrap properly.
-  (if (>= usr-input-method--index (length usr-input-method-list))
-      (setq usr-input-method--index 0)
-    (when (< usr-input-method--index 0)
-      (setq usr-input-method--index (1- (length usr-input-method-list))) ))
-  (set-input-method (nth usr-input-method--index usr-input-method-list))
-  (message "Current IME: %S" (nth usr-input-method--index usr-input-method-list)) )
+  (if (>= *usr-input-method--index* (length *usr-input-method-list*))
+      (setq *usr-input-method--index* 0)
+    (when (< *usr-input-method--index* 0)
+      (setq *usr-input-method--index* (1- (length *usr-input-method-list*))) ))
+  (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
+  (message "Current IME: %S" (nth *usr-input-method--index* *usr-input-method-list*)) )
 
 ;; IME - 영어 간의 전환 함수
-(defun usr-input-method-toggle ()
+(defun my/usr-input-method-toggle ()
   (interactive)
   (if (eq current-input-method nil)
-      (set-input-method (nth usr-input-method--index usr-input-method-list))
+      (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
     (set-input-method nil)) )
 #+END_SRC
 
@@ -174,7 +174,7 @@ wrapping if necessary, then call the function at this index in
 가독성을 위해 전역적으로 줄바꿈이 이루어지도록 설정합니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(gloal-visal-line-mode t)
+(global-visual-line-mode t)
 #+END_SRC
 
 모드 라인에 =2018-06-03 16:06= 형식으로 시간을 표시합니다.
@@ -206,7 +206,8 @@ Emacs는 yes / no, y / n 중 하나의 방식을 사용해 명령의 실행 여�
 ;; select fonts
 ;;; refs: [1] https://github.com/syl20bnr/spacemacs/issues/9445
 ;;;       [2] https://emacs.stackexchange.com/questions/28390/quickly-adjusting-text-to-dpi-changes
-(defun select-kr-font (opt)
+(defun my/select-kr-font (opt)
+  "화면의 해상도와 dpi에 맞게 폰트 크기를 조절합니다."
   (when window-system
     (let* ((attrs (car (display-monitor-attributes-list)))
          (size (assoc 'mm-size attrs))
@@ -261,14 +262,14 @@ Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파
 
 ;; 히스토리 설정
 (savehist-mode 1)
-(setq savehist-file (concat user-emacs-directory "savehist/")) ;; 히스토리 디렉토리
+(setq savehist-file (concat user-emacs-directory "savehist")) ;; 히스토리 파일
 (setq history-length t) ;; 전체 히스토리 저장
 (setq history-delete-duplicates t) ;; 중복된 히스토리 내역은 제거
 (setq savehist-save-minibuffer-history 1) ;; 미니버퍼 히스토리 저장
 (setq savehist-additional-variables 
       '(kill-ring
         search-ring
-        regexp-search-ring) ;; 추가적으로 저장할 히스토리 내역 설정)
+        regexp-search-ring)) ;; 추가적으로 저장할 히스토리 내역 설정
 #+END_SRC
 
 ** 기타 설정
@@ -324,11 +325,11 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
   (setq org-support-shift-select t) 
   ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책이며, 이를 부분적으로 구현하기 위해, 유니코드 문자 중에 '보이지 않는 스페이스'를 사용하여 편법으로 부분 강조를 가능하게 합니다.
   ;; 참고: https://emacs.stackexchange.com/questions/18499/mark-up-only-part-of-a-word/18511
-  (defun insert-zero-width-space ()
+  (defun my/insert-zero-width-space ()
     (interactive)
     (insert-char #x200b))
   ;; Ctrl + * 를 누르면 강조문자 앞뒤에 해당 문자를 넣을 수 있습니다.
-  (define-key org-mode-map (kbd "C-*") 'insert-zero-width-space)
+  (define-key org-mode-map (kbd "C-*") 'my/insert-zero-width-space)
   ;; 해당 문자를 스페이스와 같은 취급을 하도록 설정을 바꿔줍니다.
   (setq org-emphasis-regexp-components '(" \t('\"{\x200B" "- \t.,:!?;'\")}\\[\x200B" " \t\r\n,\"'" "." 1))
 #+END_SRC
@@ -353,7 +354,7 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
                        org-panel
                        org-screen
                        org-collector))
-   (org-load-modules-maybe t)
+   (org-load-modules-maybe t))
  #+END_SRC
 
 
@@ -429,9 +430,9 @@ winner-mode는 윈도우 레이아웃 상태를 저장하고, 레이아웃 간�
 
     ;; 검색 결과의 업데이트 속도를 더 빠르게 합니다.
     ;; 참고: https://gist.github.com/antifuchs/9238468
-    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-          helm-input-idle-delay 0.01  ; this actually updates things
-                                        ; reeeelatively quickly.
+    (setq helm-idle-delay 0.0 ;; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ;; this actually updates things
+                                      ;; reeeelatively quickly.
           helm-quick-update t
           helm-M-x-requires-pattern nil
           helm-ff-skip-boring-files t)
@@ -595,5 +596,52 @@ wc-mode는 모드 라인에 단어수를 표시하는 패키지입니다.
   :config
   (setq sml/theme 'dark)
   (sml/setup)
-  (select-kr-font "c"))
+  (my/select-kr-font "c"))
+#+END_SRC
+
+* 동기화
+
+마치 바이트 컴파일처럼, org 파일(그러니까 현재 파일)을 바로 읽어들이는 것보다는 포함된 소스 코드를 따로 정리해 로드하는 것이 더 실행속도가 빠릅니다. 이를 위해, 다음과 같이 async 패키지를 사용해 org 파일을 변경할 때마다 config.el 파일을 업데이트합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package async)
+
+(defvar *config-file* (expand-file-name "config.org" user-emacs-directory)
+  "설정을 기록한 org 파일입니다.")
+
+(defvar *config-last-change* (nth 5 (file-attributes *config-file*))
+  "가장 최근에 설정을 변경한 시간입니다.")
+
+(defvar *show-async-tangle-results* nil
+  "비동기 작업 버퍼를 보존해 이후에도 쓸 수 있도록 합니다.")
+
+(defun my/config-updated ()
+  "마지막으로 업데이트한 시간 이후에 설정 파일이 변경되었는지 확인합니다."
+  (time-less-p *config-last-change*
+               (nth 5 (file-attributes *config-file*))))
+
+(defun my/config-tangle ()
+  "org 파일을 비동기적으로 변환합니다."
+  (when (my/config-updated)
+    (setq *config-last-change*
+          (nth 5 (file-attributes *config-file*)))
+    (my/async-babel-tangle *config-file*)))
+
+(defun my/async-babel-tangle (org-file)
+  "org 파일을 비동기적으로 변환합니다."
+  (let ((init-tangle-start-time (current-time))
+        (file (buffer-file-name))
+        (async-quiet-switch "-q"))
+    (async-start
+     `(lambda ()
+        (require 'org)
+        (org-babel-tangle-file ,org-file))
+     (unless *show-async-tangle-results*
+       `(lambda (result)
+          (if result
+              (message "성공: %s을(를) 성공적으로 변환했습니다 (%.2fs)."
+                       ,org-file
+                       (float-time (time-subtract (current-time)
+                                                  ',init-tangle-start-time)))
+            (message "오류: %s을(를) 변환하는 데 실패했습니다." ,org-file)))))))
 #+END_SRC

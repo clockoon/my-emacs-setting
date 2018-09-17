@@ -11,8 +11,7 @@
 - 크로스플랫폼: 현재 윈도우 및 OSX 환경에서 동시에 테스트되고 있으며, 리눅스 환경에서도 사용 가능하도록 합니다.
 
 ## 설치법
-1. 설정파일들을 아무 폴더에나 다운받습니다.
-2. 다운받은 파일 중 .emacs 파일을 HOME 폴더에 복사합니다. 윈도우즈의 경우 [이 문서](https://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html)를 참고하면 됩니다.
+1. 설정파일들을 다운받아 HOME 디렉토리에 복사합니다. 혹은 git clone 명령어를 사용해도 됩니다(이쪽을 더 추천합니다). 윈도우즈의 경우, [이 문서](https://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html)를 참고하여 폴더를 찾거나 설정합니다.
 3. 복사한 .emacs 파일을 열고, 다운받은 폴더 경로를 custom-file-path에 입력한 다음 저장합니다.
 
 ## 사용법
@@ -23,36 +22,33 @@
 - _S-space: 설정한 입력기와 영문을 전환합니다.
 
 ## 파일 목록
-- main_conf.el: 기본적인 설정을 모아놓은 파일입니다.
-- packages.el: 패키지를 설치 및 설정하기 위한 파일입니다.
-- keymap.el: 단축키 설정을 모아놓은 파일입니다.
+- init.el: 처음 Emacs가 읽어들이는 파일입니다.
+- freshstart.el: 맨 처음 설정을 적용한 경우, 초기화 및 필요한 패키지를 다운받기 위해 읽어들이는 파일입니다.
+- config.org: 모든 설정이 모여져 있는 파일입니다. org-mode 형식으로 쓰여져 있으며, 따라서 Emacs나 Github 등에서 쉽게 읽을 수 있습니다.
 
 ## 패키지 목록
+아래 목록은 이 설정에서 적용한 패키지 중 일부입니다. 전체 목록은 config.org 파일을 확인해 보세요.
+
 ### 문법 확장
 - markdown-mode: 마크다운을 표시 및 입력할 수 있도록 합니다.
-- org: Org mode
-- Haskell
+- org: Org-mode
 
 ### 인터페이스 확장
 - writeroom-mode: 전체화면에서 수정할 수 있도록 합니다.
 - powerline: vim과 유사하게 mode-line을 보기 좋게 수정해 줍니다.
 - wc-mode: mode-line에 문서의 단어수를 표시합니다.
-- 테마들
-    - afternoon-theme
-	- color-theme-sanityinc-tomorrow (기본테마)
-	- zenburn-theme
 
 ### 기타
 - magit: Git을 편리하게 관리할 수 있습니다.
 
 ## 수정사항
-- 한글을 아름답게 표시할 수 있도록 기본 폰트를 D2Coding으로 설정하였습니다.
+- 한글을 깔끔답게 표시할 수 있도록 기본 폰트를 D2Coding으로 설정하였습니다.
 - Emacs에서는 패키지 관리를 위해 여러 솔루션을 제공하지만, 가장 편리하게 관리할 수 있는 use-package를 사용하였습니다.
 
 ## TODO
-- 코드 정리 및 모듈화
 - 구동시간 최적화
-- org 파일을 통한 가독성 증가
+- 더 편리한 사용자 설정
+- 별개의 프로젝트로, Emacs 한글화를 진행할 예정입니다.
 
 ## 기타
 이 설정은 비정기적으로, 수시 업데이트됩니다. 개선점은 이 저장소의 issue나 이메일 (clockoon@gmail.com)을 통해 반영될 것입니다.

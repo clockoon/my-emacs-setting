@@ -354,7 +354,7 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
                        org-panel
                        org-screen
                        org-collector))
-   (org-load-modules-maybe t))
+   (org-load-modules-maybe t)) ;;use-package org Ends
  #+END_SRC
 
 
@@ -379,16 +379,31 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 
 우선 latex 관련 설정입니다.
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; latex에 export할 때 사용할 사용자 지정 class를 정의합니다.
-
-(add-to-list 'org-latex-classes
+;; 참고: https://superuser.com/questions/896741/how-do-i-configure-org-latex-classes-in-emacs
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
           '("dissertation"
              "\\documentclass[12pt]{report}"
              ("\\chapter{%s}" . "\\chapter*{%s}")
              ("\\section{%s}" . "\\section*{%s}")
              ("\\subsection{%s}" . "\\subsection*{%s}")
-             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+
+;; LaTeX 변환을 위해 필요한 PATH 설정을 추가합니다.
+(getenv "PATH")
+(cond
+  ((eq system-type 'darwin)
+    (setenv "PATH"
+      (concat
+      "/Library/TeX/texbin" ":" (getenv "PATH")))))
+
+;; pdf 변환 시 bibtex를 제대로 처리하기 위한 설정
+(setq org-latex-pdf-process '("pdflatex -interaction nonstopmode %f" "bibtex %b" "pdflatex -interaction nonstopmode %f" "pdflatex -interaction nonstopmode --synctex=-1 %f"))
+
+;; LaTeX 수식을 미리볼 수 있도록 프로그램을 설정합니다.
+(setq org-latex-create-formula-image-program 'dvipng)
 #+END_SRC
 
 ** 시스템 관련
@@ -455,6 +470,31 @@ magit은 Emacs 상에서 Git 파일을 관리하는 솔루션입니다.
   )
 #+END_SRC
 
+** 마크업
+여러 문서를 작성하는 데에 필요한 마크업에 대한 패키지들입니다.
+
+*** markdown-mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown")) ;; 기본적인 마크다운 렌더링 엔진으로 multimarkdown을 설정합니다.
+#+END_SRC
+
+*** auctex
+AUCTeX는 Emacs에서 더 편하게 LaTeX 파일을 편집하도록 도와주는 패키지입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package tex
+  :defer t
+  :ensure auctex ;; auctex.el이 자동으로 로드되지 않는 문제 해결
+  :config
+  (setq TeX-auto-save t))
+#+END_SRC
 ** 기타
 
 *** miniedit
@@ -476,6 +516,7 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
   (progn
     (global-undo-tree-mode 1) ;; 모든 버퍼에서 실행 가능하도록
     ;; undo-redo 단축키 설정
+    ;; ref: http://pragmaticemacs.com/emacs/advanced-undoredo-with-undo-tree/
     (defalias 'redo 'undo-tree-redo)
     (cond
       ((eq system-type 'darwin)
@@ -530,18 +571,6 @@ Emacs를 전체화면으로 표시하고, 불필요한 요소들은 숨겨서 �
   :ensure t
   :defer 2
   )
-#+END_SRC
-
-*** markdown-mode
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package markdown-mode
-  :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown")) ;; 기본적인 마크다운 렌더링 엔진으로 multimarkdown을 설정합니다.
 #+END_SRC
 
 *** smartparens

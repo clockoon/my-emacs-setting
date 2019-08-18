@@ -77,20 +77,7 @@ Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합�
   (add-to-list 'package-archives '("user42" . "https://download.tuxfamily.org/user42/elpa/packages/") t))
 #+END_SRC
  
-이 설정파일에서는 [[https://github.com/jwiegley/use-package][use-package]]를 사용해 패키지를 관리합니다. 기본적인 방식에 비해 use-package는 더 강력하고 효율적이며 빠르게 패키지를 관리할 수 있습니다.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; (설치되어 있지 않을 경우) use-package 설치
-(when (not (package-installed-p 'use-package))
-  (condition-case nil
-      (package-install 'use-package)
-    (error
-     (package-refresh-contents)
-     (package-install 'use-package))))
-
-(setq use-package-verbose t) ;; 로딩이 느린 패키지의 경우 *Messages* 버퍼에 출력합니다.
-(setq use-package-always-ensure t) ;; 패키지가 설치되어 있는지 확인 후 없으면 다운받습니다.
-#+END_SRC
+이 설정파일에서는 [[https://github.com/jwiegley/use-package][use-package]]를 사용해 패키지를 관리합니다. 기본적인 방식에 비해 use-package는 더 강력하고 효율적이며 빠르게 패키지를 관리할 수 있습니다. 아울러 패키지의 자동 업데이트를 위해 [[https://github.com/rranelli/auto-package-update.el][auto-package-update.el]]을 사용합니다. 이에 대한 설정은 [[패키지 설정]] 섹션을 참고하십시오.
 
 ** 한국어 설정
 
@@ -311,6 +298,25 @@ Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파
 
 - =:defer=: Emacs 로드 시 동시에 실행하는 것이 아니라, 필요할 때에만 로드하도록 하여 초기 기동 시간을 절약합니다.
 
+*** 자동 업데이트
+
+use-package는 패키지를 설치하고 로딩하지만, 자동으로 업데이트하지는 않습니다. 이를 위해서 auto-package-update.el을 설치합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package auto-package-update
+  :config
+  ;; 패키지의 업데이트가 존재할 경우 자동으로 업데이트를 진행합니다.
+  (auto-package-update-maybe)
+  ;; 1달(4주)에 한번 빈도로 자동 업데이트를 진행합니다.
+  (setq auto-package-update-interval 28)
+  ;; 업데이트를 진행하기 전에 진행 여부를 물어봅니다.
+  (setq auto-package-update-prompt-before-update t)
+  ;; 업데이트 진행 후 이전 버전 파일을 삭제합니다.
+  (setq auto-package-update-delete-old-versions t))
+
+
+#+END_SRC
+
 ** org
 
 org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외에도 수많은 기능을 수행할 수 있습니다. 블로그를 작성하는 데에도, 노트를 작성하는 데에도, 스케쥴을 관리하는 데에도, 할일을 정리하는 데에도 쓸 수 있습니다.
@@ -383,13 +389,28 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 ;; latex에 export할 때 사용할 사용자 지정 class를 정의합니다.
 ;; 참고: https://superuser.com/questions/896741/how-do-i-configure-org-latex-classes-in-emacs
 (with-eval-after-load 'ox-latex
+;; ** <<Dissertation>>
   (add-to-list 'org-latex-classes
           '("dissertation"
-             "\\documentclass[12pt]{report}"
+             "\\documentclass[12pt,a4paper]{report}"
              ("\\chapter{%s}" . "\\chapter*{%s}")
              ("\\section{%s}" . "\\section*{%s}")
              ("\\subsection{%s}" . "\\subsection*{%s}")
-             ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+;; ** <<APS journals>>
+;; ref: https://github.com/jkitchin/jmax
+  (add-to-list 'org-latex-classes 
+          '("revtex4-1"
+             "\\documentclass{revtex4-1}
+             [NO-DEFAULT-PACKAGES]
+             [PACKAGES]
+             [EXTRA]"
+             ("\\section{%s}" . "\\section*{%s}")
+             ("\\subsection{%s}" . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}" . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+)
 
 ;; LaTeX 변환을 위해 필요한 PATH 설정을 추가합니다.
 (getenv "PATH")
@@ -400,10 +421,13 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
       "/Library/TeX/texbin" ":" (getenv "PATH")))))
 
 ;; pdf 변환 시 bibtex를 제대로 처리하기 위한 설정
-(setq org-latex-pdf-process '("pdflatex -interaction nonstopmode %f" "bibtex %b" "pdflatex -interaction nonstopmode %f" "pdflatex -interaction nonstopmode --synctex=-1 %f"))
+(setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "bibtex %b" "xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode --synctex=-1 %f"))
 
 ;; LaTeX 수식을 미리볼 수 있도록 프로그램을 설정합니다.
 (setq org-latex-create-formula-image-program 'dvipng)
+
+;; orgmode에서 LaTeX로 export할 때에는 기본적으로 label을 자동으로 생성해서 사용하므로, \ref 등을 사용하는 데에 어려움이 있습니다. 사용자 지정 label을 사용할 수 있게 설정을 바꾸어 줍니다.
+(setq org-latex-prefer-user-labels t)
 #+END_SRC
 
 ** 시스템 관련
@@ -429,37 +453,91 @@ winner-mode는 윈도우 레이아웃 상태를 저장하고, 레이아웃 간�
   :defer t
   :config (winner-mode))
 #+END_SRC
-** helm
 
-   [[https://github.com/emacs-helm/helm][Helm]]은 Emacs의 자동완성 기능을 확장시켜 주는 패키지입니다. 다양한 기능을 제공하고 있지만, 그 반대급부로 구동이 무거워지는 단점이 있어서 많은 사람들은 Ivy 등의 대안을 선택하기도 합니다(참고: [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][From helm, to ivy]], [[http://blog.binchen.org/posts/hello-ivy-mode-bye-helm.html][Hello Ivy-mode, bye Helm]] 등).
+** 인터페이스
+Emacs를 편하게 사용하기 위한 인터페이스 관련 패키지들의 모음입니다.
+*** helm
+
+    [[https://github.com/emacs-helm/helm][Helm]]은 Emacs의 자동완성 기능을 확장시켜 주는 패키지입니다. 다양한 기능을 제공하고 있지만, 그 반대급부로 구동이 무거워지는 단점이 있어서 많은 사람들은 Ivy 등의 대안을 선택하기도 합니다(참고: [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][From helm, to ivy]], [[http://blog.binchen.org/posts/hello-ivy-mode-bye-helm.html][Hello Ivy-mode, bye Helm]] 등).
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ (use-package helm
+   :diminish helm-mode
+   :config
+   (progn
+     (require 'helm-config)
+     (setq helm-candidate-number-limit 100) ;; 자동완성 후보 숫자를 제한해 속도를 높입니다.
+
+     ;; 검색 결과의 업데이트 속도를 더 빠르게 합니다.
+     ;; 참고: https://gist.github.com/antifuchs/9238468
+     (setq helm-idle-delay 0.0 ;; update fast sources immediately (doesn't).
+           helm-input-idle-delay 0.01  ;; this actually updates things
+                                       ;; reeeelatively quickly.
+           helm-quick-update t
+           helm-M-x-requires-pattern nil
+           helm-ff-skip-boring-files t)
+     (helm-mode))
+   :bind (("M-x" . helm-M-x)
+	  ("C-c h" . helm-mini)
+	  ("C-x b" . helm-buffers-list)
+	  ("C-h a" . helm-apropos)
+	  ("C-x C-f" . helm-find-files)
+	  ("C-x c o" . helm-occur)
+	 
+	  ))
+ #+END_SRC
+
+*** writeroom-mode
+Emacs를 전체화면으로 표시하고, 불필요한 요소들은 숨겨서 글쓰기에 집중할 수 있도록 하는 모드입니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package helm
-  :diminish helm-mode
-  :config
-  (progn
-    (require 'helm-config)
-    (setq helm-candidate-number-limit 100) ;; 자동완성 후보 숫자를 제한해 속도를 높입니다.
+(use-package writeroom-mode
+  )
+#+END_SRC
+*** wc-mode
+wc-mode는 모드 라인에 단어수를 표시하는 패키지입니다.
 
-    ;; 검색 결과의 업데이트 속도를 더 빠르게 합니다.
-    ;; 참고: https://gist.github.com/antifuchs/9238468
-    (setq helm-idle-delay 0.0 ;; update fast sources immediately (doesn't).
-          helm-input-idle-delay 0.01  ;; this actually updates things
-                                      ;; reeeelatively quickly.
-          helm-quick-update t
-          helm-M-x-requires-pattern nil
-          helm-ff-skip-boring-files t)
-    (helm-mode))
-  :bind (("M-x" . helm-M-x)
-	 ("C-c h" . helm-mini)
-	 ("C-x b" . helm-buffers-list)
-	 ("C-h a" . helm-apropos)
-	 ("C-x C-f" . helm-find-files)
-	 ("C-x c o" . helm-occur)
-	 
-	 ))
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package wc-mode
+  :config
+  (setq wc-modeline-format
+	(concat "[%tw" (if wc-word-goal "/%gw") "w %tc" (if wc-char-goal "/%gc") "c]"))
+  :bind ("C-c w" . wc-mode)) 
 #+END_SRC
 
+*** undo-tree
+undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보여주는 패키지입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (global-undo-tree-mode 1) ;; 모든 버퍼에서 실행 가능하도록
+    ;; undo-redo 단축키 설정
+    ;; ref: http://pragmaticemacs.com/emacs/advanced-undoredo-with-undo-tree/
+    (defalias 'redo 'undo-tree-redo)
+    (cond
+      ((eq system-type 'darwin)
+       (global-set-key (kbd "s-z") 'undo)
+       (global-set-key (kbd "s-S-z") 'redo))
+      (
+       (global-set-key (kbd "C-z") 'undo)
+       (global-set-key (kbd "C-S-z") 'redo)))
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
+#+END_SRC
+
+*** neotree
+많은 모던 에디터, 예컨대 sublime text나 atom, vscode처럼 사이드바에 트리 기능을 지원하도록 하는 패키지입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package neotree
+  :ensure t
+  :config
+  ;;(setq neo-theme (if (display-graphic-p) 'icons 'arrow)) ;; 화살표 테마 설정
+  (global-set-key [f9] 'neotree-toggle)) ;; 토글 단축키 설정
+#+END_SRC
 
 ** magit
 magit은 Emacs 상에서 Git 파일을 관리하는 솔루션입니다.
@@ -506,29 +584,6 @@ AUCTeX는 Emacs에서 더 편하게 LaTeX 파일을 편집하도록 도와주는
   :init (miniedit-install))
 #+END_SRC
 
-*** undo-tree
-undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보여주는 패키지입니다.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package undo-tree
-  :diminish undo-tree-mode
-  :config
-  (progn
-    (global-undo-tree-mode 1) ;; 모든 버퍼에서 실행 가능하도록
-    ;; undo-redo 단축키 설정
-    ;; ref: http://pragmaticemacs.com/emacs/advanced-undoredo-with-undo-tree/
-    (defalias 'redo 'undo-tree-redo)
-    (cond
-      ((eq system-type 'darwin)
-       (global-set-key (kbd "s-z") 'undo)
-       (global-set-key (kbd "s-S-z") 'redo))
-      (
-       (global-set-key (kbd "C-z") 'undo)
-       (global-set-key (kbd "C-S-z") 'redo)))
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
-#+END_SRC
-
 *** guide-key
 [[https://github.com/kai2nenobu/guide-key][guide-key]]는 복잡한 키 바인딩을 다 외울 필요 없이, 특정 조합의 키를 누르면 그에 해당하는 바인딩의 목록을 나타냅니다.
 
@@ -554,14 +609,6 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
         deft-directory "~/Dropbox/Texts"
         deft-recursive t ; indexing subdirectories
         deft-use-filename-as-title t))
-#+END_SRC
-
-*** writeroom-mode
-Emacs를 전체화면으로 표시하고, 불필요한 요소들은 숨겨서 글쓰기에 집중할 수 있도록 하는 모드입니다.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package writeroom-mode
-  )
 #+END_SRC
 
 *** mediawiki
@@ -602,17 +649,6 @@ Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니�
     (setenv "PATH" (concat "C:\\msys64\\mingw64\\bin;" (getenv "PATH"))))
    )
   )
-#+END_SRC
-
-*** wc-mode
-wc-mode는 모드 라인에 단어수를 표시하는 패키지입니다.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package wc-mode
-  :config
-  (setq wc-modeline-format
-	(concat "[%tw" (if wc-word-goal "/%gw") "w %tc" (if wc-char-goal "/%gc") "c]"))
-  :bind ("C-c w" . wc-mode)) 
 #+END_SRC
 
 ** 꾸미기

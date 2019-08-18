@@ -28,20 +28,7 @@
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
- '(package-selected-packages
-   (quote
-    (async wc-mode smart-mode-line-powerline-theme smart-mode-line gruvbox-theme pdf-tools php-mode smartparens markdown-mode mediawiki writeroom-mode org-journal ox-mediawiki magit deft guide-key undo-tree miniedit helm auto-compile use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+;; set custom file and open: disable writing on  init.el
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)

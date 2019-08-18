@@ -528,15 +528,33 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
     (setq undo-tree-visualizer-diff t)))
 #+END_SRC
 
-*** neotree
-많은 모던 에디터, 예컨대 sublime text나 atom, vscode처럼 사이드바에 트리 기능을 지원하도록 하는 패키지입니다.
+*** treemacs
+많은 모던 에디터, 예컨대 sublime text나 atom, vscode처럼 사이드바에 트리 기능을 지원하도록 하는 패키지입니다. 이전에는 [[https://github.com/jaypei/emacs-neotree][neotree]]를 사용했으나, treemacs가 여러 모로 더 낫다고 [[https://www.reddit.com/r/emacs/comments/7249jt/introducing_treemacs_a_modern_file_project/dnfqtj1/][알려져]] 있습니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package neotree
+(use-package treemacs
   :ensure t
-  :config
-  ;;(setq neo-theme (if (display-graphic-p) 'icons 'arrow)) ;; 화살표 테마 설정
-  (global-set-key [f9] 'neotree-toggle)) ;; 토글 단축키 설정
+  :defer t
+  :requires (f s dash ace-window pfuture ht hydra)
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+;; magit과 연동되는 treemacs-magit 패키지 설치
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t) 
+;; 아이콘 설치
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
+
 #+END_SRC
 
 ** magit

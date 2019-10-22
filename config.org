@@ -46,19 +46,6 @@ Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합�
 
 * 기본 설정
 
-** 외부 파일
-
-설정을 불러오면서 사용하게 될 외부 설정 파일에 대해 정의합니다.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; 개인적인 변수나 값은 "private.el" 파일에 저장합니다. 필요할 경우 여기에 변수를 입력하세요.
-(if (file-exists-p (expand-file-name "private.el" user-emacs-directory))
-    (load-file (expand-file-name "private.el" user-emacs-directory)))
-
-;; Emacs상에서 수정한 사항은 'custom.el' 파일에 저장해 소스 파일을 건드리지 않도록 합니다.
-(load (expand-file-name "custom.el" user-emacs-directory) :noerror)
-#+END_SRC
-
 ** (기본) 패키지 설정
 
 우선 패키지를 초기화하고, 설정에 필요한 저장소를 추가합니다.

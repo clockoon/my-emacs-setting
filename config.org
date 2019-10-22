@@ -186,6 +186,13 @@ Emacs는 yes / no, y / n 중 하나의 방식을 사용해 명령의 실행 여�
 (use-package quick-yes)
 #+END_SRC
 
+Home 및 End 키가 줄의 처음과 끝으로 이동시키도록(각각 C-a, C-e에 해당) 키를 할당합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key [home] 'move-beginning-of-line)
+(global-set-key [end] 'move-end-of-line)
+#+END_SRC
+
 ** 폰트 설정
 운영체제와 DPI 에 맞추어, 자동으로 텍스트 크기를 조정하는 함수를 설정합니다. 기본적인 폰트는 D2Coding이며, 가독성을 위해 기본 폰트보다 크게 설정되어 있습니다. 더 많은 텍스트를 화면에 표시하고 싶다면 =x-font-height= 값을 조절하면 됩니다.
 

@@ -476,6 +476,7 @@ Emacs를 편하게 사용하기 위한 인터페이스 관련 패키지들의 �
            helm-quick-update t
            helm-M-x-requires-pattern nil
            helm-ff-skip-boring-files t)
+     (customize-set-variable 'helm-ff-lynx-style-map t)
      (helm-mode))
    :bind (("M-x" . helm-M-x)
 	  ("C-c h" . helm-mini)
@@ -483,6 +484,7 @@ Emacs를 편하게 사용하기 위한 인터페이스 관련 패키지들의 �
 	  ("C-h a" . helm-apropos)
 	  ("C-x C-f" . helm-find-files)
 	  ("C-x c o" . helm-occur)
+
 	 
 	  ))
  #+END_SRC

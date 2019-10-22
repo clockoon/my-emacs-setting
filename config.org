@@ -1,3 +1,4 @@
+-*- coding:utf-8 -*-
 #+TITLE: GNU Emacs Configuration for Korean
 #+AUTHOR: Sungbin Jeon
 #+DATE: 2018-06-02

@@ -1,3 +1,4 @@
+;; -*- coding: utf-8 -*-
 ;;; init.el --- 한국어 사용자를 위한 GNU Emacs 설정
 
 ;; Copyright (c) Sungbin Jeon 2018

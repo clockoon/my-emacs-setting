@@ -674,10 +674,92 @@ Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니�
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package gruvbox-theme
   :config
-  (load-theme 'gruvbox t))
+  (load-theme 'gruvbox t)
+  (my/select-kr-font "c"))
 #+END_SRC
 
-*** smart-mode-line
+*** spaceline
+[[https://github.com/TheBB/spaceline][spaceline]]은 아래 [[smart-mode-line]] 보다 더 가볍고 빠르지만, 설정의 (시각적) 자유도가 아직은 크지 않습니다. 또한 기존 모드 라인과의 이질성이 상당히 큽니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package spaceline
+  :init
+  (setq powerline-default-separator nil)
+  :config
+  (spaceline-emacs-theme)
+  (spaceline-helm-mode)
+  (setq spaceline-buffer-encoding-abbrev t)
+  (spaceline-compile
+    ;; left side
+    '(
+      ;; input method / buffer info
+      ((input-method :fallback "영 " :tight t)
+       (buffer-modified :tight t)
+       (buffer-id :tight t)
+       :priority 99
+       :tight t))
+    ;; right side
+    '((minor-modes :priority 99)
+      (buffer-encoding-abbrev :tight t)
+      (buffer-position :priority 99)
+      (hud :priority 99 :fallback " "))
+  )   
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(spaceline-compile
+  ; left side
+  '(((persp-name
+      workspace-number
+      window-number)
+     :fallback evil-state
+     :face highlight-face
+     :priority 100)
+    (anzu :priority 95)
+    auto-compile
+    ((buffer-modified buffer-size buffer-id remote-host)
+     :priority 98)
+    (major-mode :priority 79)
+    (process :when active)
+    ((flycheck-error flycheck-warning flycheck-info)
+     :when active
+     :priority 89)
+    (minor-modes :when active
+                 :priority 9)
+    (mu4e-alert-segment :when active)
+    (erc-track :when active)
+    (version-control :when active
+                     :priority 78)
+    (org-pomodoro :when active)
+    (org-clock :when active)
+    nyan-cat)
+  ; right side
+  '(which-function
+    (python-pyvenv :fallback python-pyenv)
+    (purpose :priority 94)
+    (battery :when active)
+    (selection-info :priority 95)
+    input-method
+    ((buffer-encoding-abbrev
+      point-position
+      line-column)
+     :separator " | "
+     :priority 96)
+    (global :when active)
+    (buffer-position :priority 99)
+    (hud :priority 99)))
+#+END_SRC
+
+
+*** COMMENT powerline
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package powerline
+  :config
+  (powerline-default-theme))
+#+END_SRC
+*** COMMENT smart-mode-line
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package smart-mode-line
@@ -685,8 +767,7 @@ Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니�
   (use-package smart-mode-line-powerline-theme)
   :config
   (setq sml/theme 'dark)
-  (sml/setup)
-  (my/select-kr-font "c"))
+  (sml/setup))
 #+END_SRC
 
 * 동기화

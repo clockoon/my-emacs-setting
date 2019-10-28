@@ -53,7 +53,8 @@ Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합�
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
 (setq package--init-file-ensured 't)
-(package-initialize) ;; 패키지 초기화
+
+(setq kill-buffer-query-functions nil) ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
 
 ;; 패키지 저장소 추가
 ;; 저장소: MELPA, ORG-MODE, user42
@@ -63,6 +64,8 @@ Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합�
   (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
 (when (not (assoc-default "user42" package-archives))
   (add-to-list 'package-archives '("user42" . "https://download.tuxfamily.org/user42/elpa/packages/") t))
+
+(package-initialize) ;; 패키지 초기화
 #+END_SRC
  
 이 설정파일에서는 [[https://github.com/jwiegley/use-package][use-package]]를 사용해 패키지를 관리합니다. 기본적인 방식에 비해 use-package는 더 강력하고 효율적이며 빠르게 패키지를 관리할 수 있습니다. 아울러 패키지의 자동 업데이트를 위해 [[https://github.com/rranelli/auto-package-update.el][auto-package-update.el]]을 사용합니다. 이에 대한 설정은 [[패키지 설정]] 섹션을 참고하십시오.

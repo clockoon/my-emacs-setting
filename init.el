@@ -13,9 +13,7 @@
 ;; REF: https://github.com/rememberYou/.emacs.d/
 (setq gc-cons-threshold (* 50 1000 1000))
 
-;; 패키지 초기화
 (setq package--init-file-ensured 't) ;; prevent writing (package-initilize) on init.el
-(package-initialize)
 
 ;; 초기 설정: org-mode가 설치되어 있지 않을 경우 'freshstart.el' 파일을 불러들여 진행
 (when (not (package-installed-p 'org))
@@ -32,4 +30,6 @@
 
 ;; set custom file and open: disable writing on  init.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file))
 (load custom-file)

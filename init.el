@@ -14,6 +14,7 @@
 (setq gc-cons-threshold (* 50 1000 1000))
 
 (setq package--init-file-ensured 't) ;; prevent writing (package-initilize) on init.el
+(package-initialize) ;; package-installed-p 때문에 초기화 필요
 
 ;; 초기 설정: org-mode가 설치되어 있지 않을 경우 'freshstart.el' 파일을 불러들여 진행
 (when (not (package-installed-p 'org))

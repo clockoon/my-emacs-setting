@@ -349,15 +349,10 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
  ;; continue with :config
    (setq org-modules `(org-bibtex
                        org-docview
-                       org-drill
                        org-info
                        org-mouse
-                       org-annotate-fil
                        org-eval
-                       org-toc
-                       org-panel
-                       org-screen
-                       org-collector))
+                       org-screen))
    (org-load-modules-maybe t)) ;;use-package org Ends
  #+END_SRC
 

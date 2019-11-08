@@ -108,7 +108,7 @@ Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태�
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; IME 목록: 2벌식, 3벌식(390 / 391), 일본어
 ;; 다른 언어를 추가하는 것도 가능합니다.
-(defvar *usr-input-method-list* 
+(defconst *usr-input-method-list* 
   '("korean-hangul"
    "korean-hangul390"
    "korean-hangul3f"

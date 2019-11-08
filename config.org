@@ -423,6 +423,13 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 (setq org-latex-prefer-user-labels t)
 #+END_SRC
 
+[[http://gohugo.io/][Hugo]]로 출판하는 데에 쓰이는 [[https://ox-hugo.scripter.co/][ox-hugo]] 관련 설정입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ox-hugo
+  :after ox)
+#+END_SRC
+
 ** 시스템 관련
 
 *** auto-compile

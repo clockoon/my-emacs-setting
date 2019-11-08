@@ -108,7 +108,7 @@ Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태�
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; IME 목록: 2벌식, 3벌식(390 / 391), 일본어
 ;; 다른 언어를 추가하는 것도 가능합니다.
-(defvar *usr-input-method-list* 
+(defconst *usr-input-method-list* 
   '("korean-hangul"
    "korean-hangul390"
    "korean-hangul3f"
@@ -188,43 +188,78 @@ Home 및 End 키가 줄의 처음과 끝으로 이동시키도록(각각 C-a, C-
 운영체제와 DPI 에 맞추어, 자동으로 텍스트 크기를 조정하는 함수를 설정합니다. 기본적인 폰트는 D2Coding이며, 가독성을 위해 기본 폰트보다 크게 설정되어 있습니다. 더 많은 텍스트를 화면에 표시하고 싶다면 =x-font-height= 값을 조절하면 됩니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-;; select fonts
-;;; refs: [1] https://github.com/syl20bnr/spacemacs/issues/9445
-;;;       [2] https://emacs.stackexchange.com/questions/28390/quickly-adjusting-text-to-dpi-changes
-(defun my/select-kr-font (opt)
-  "화면의 해상도와 dpi에 맞게 폰트 크기를 조절합니다."
-  (when window-system
-    (let* ((attrs (car (display-monitor-attributes-list)))
-         (size (assoc 'mm-size attrs))
-         (sizex (cadr size))
-         (res (cdr (assoc 'geometry attrs)))
-         (resx (- (cadr (cdr res)) (car res)))
-         (dpi (* (/ (float resx) sizex) 25.4)))
-    (cond
-     ((< dpi 110)
-      (setq x-font-height 16))
-     ((< dpi 130)
-      (setq x-font-height 18))
-     ((< dpi 160)
-      (setq x-font-height 20))
-      (t (setq x-font-height 22)))))
+  ;; select fonts
+  ;;; refs: [1] https://github.com/syl20bnr/spacemacs/issues/9445
+  ;;;       [2] https://emacs.stackexchange.com/questions/28390/quickly-adjusting-text-to-dpi-changes
+  ;;;       [3] https://harfangk.github.io/2018/07/21/using-korean-in-spacemacs-ko.html (단 iso10646 대신 iso10646-1로 설정
+  ;;;       [4] https://github.com/rolandwalker/unicode-fonts
+
+  ;; (defvar *unicode-font-block*
+  ;;   '(;; common
+  ;;     ("Currency Symbols"                                #x20A0   #x20CF)
+  ;;     ("CJK Symbols and Punctuation"                     #x3000   #x303F)
+  ;;     ("Enclosed CJK Letters and Months"                 #x3200   #x32FF)
+  ;;     ("Halfwidth and Fullwidth Forms"                   #xFF00   #xFFEF)
+  ;;     ;; Korean
+  ;;     ("Hangul Jamo"  #x1100   #x11FF)
+  ;;     ("Hangul Compatibility Jamo"    #x3130   #x318F)
+  ;;     ("Hangul Jamo Extended-A"       #xA960   #xA97F)
+  ;;     ("Hangul Jamo Extended-B"       #xD7B0   #xD7FF)
+  ;;     ("Hangul Syllables"             #xAC00   #xD7AF)
+  ;;     ;; korean-specific
+  ;;     ("K Currency Symbols" #x20a9  #x20a9)
+  ;;     ("K CJK Symbols and Punctuation" #x302e #x302f)
+  ;;     ("KP Enclosed CJK Letters and Months" #x3200  #x321e)
+  ;;     ("KC Enclused CJK Letters and MOnths" #x3260 #x327f)
+  ;;     ("K Halfwidth and Fullwidth Forms" #xffa1 #xffdc)
+  ;;     ("KW Halfwidth and Fullwidth Forms" #xffe6 #xffe6)))
+
+  (defun my/select-kr-font (opt)
+    "화면의 해상도와 dpi에 맞게 폰트 크기를 조절합니다."
+    (when window-system
+      (let* ((attrs (car (display-monitor-attributes-list)))
+	   (size (assoc 'mm-size attrs))
+	   (sizex (cadr size))
+	   (res (cdr (assoc 'geometry attrs)))
+	   (resx (- (cadr (cdr res)) (car res)))
+	   (dpi (* (/ (float resx) sizex) 25.4)))
+      (cond
+       ((< dpi 110)
+	(setq x-font-height 16))
+       ((< dpi 130)
+	(setq x-font-height 18))
+       ((< dpi 160)
+	(setq x-font-height 20))
+	(t (setq x-font-height 22)))))
 	 
-;   (if (> (x-display-pixel-width) 1600)
-;	(setq x-font-height 16)
-;      (setq x-font-height 12)))
-  (cond
-   ((string= opt "c") ;; "c" means "codding"
-    (set-face-attribute 'default nil :font
-			(format "%s:pixelsize=%d" "D2Coding" x-font-height)))
-   ((string= opt "s") ;; "s" means serif
+  ;   (if (> (x-display-pixel-width) 1600)
+  ;	(setq x-font-height 16)
+  ;      (setq x-font-height 12)))
+
+    (cond
+     ((string= opt "c") ;; "c" means "codding"
       (set-face-attribute 'default nil :font
-			(format "%s:pixelsize=%d" "Noto Serif KR" (- x-font-height 2))))
-   ((string= opt "ss") ;; "ss" means san-serif
-   (set-face-attribute 'default nil :font
-			(format "%s:pixelsize=%d" "Noto Sans CJK KR" (- x-font-height 2))))
-   )
-   (set-face-attribute 'mode-line nil :font
-			(format "%s:pixelsize=%d" "D2Coding" (- x-font-height 1))))
+			  (format "%s:pixelsize=%d" "IBM Plex Mono" (- x-font-height 1)))
+      (set-fontset-font "fontset-default" '(#x1100 . #x11ff) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+  (set-fontset-font "fontset-default" '#x20a9 (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+  (set-fontset-font "fontset-default" '(#x302e . #x302f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+  (set-fontset-font "fontset-default" '(#x3130 . #x318f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+  (set-fontset-font "fontset-default" '(#x3200 . #x321e) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+  (set-fontset-font "fontset-default" '(#x3260 . #x327f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+  (set-fontset-font "fontset-default" '(#xa960 . #xa97f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+  (set-fontset-font "fontset-default" '(#xac00 . #xd7a3) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+  (set-fontset-font "fontset-default" '(#xd7b0 . #xd7ff) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+  (set-fontset-font "fontset-default" '(#xffa1 . #xffdc) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+(set-fontset-font "fontset-default" '#xffe6 (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height)))
+     ((string= opt "s") ;; "s" means serif
+	(set-face-attribute 'default nil :font
+			  (format "%s:pixelsize=%d" "Noto Serif KR" (- x-font-height 2))))
+     ((string= opt "ss") ;; "ss" means san-serif
+     (set-face-attribute 'default nil :font
+			  (format "%s:pixelsize=%d" "Noto Sans CJK KR" (- x-font-height 2))))
+     )
+     (set-face-attribute 'mode-line nil :font
+			  (format "%s:pixelsize=%d" "D2Coding" (- x-font-height 1))))
 #+END_SRC
 
 ** 백업/자동저장/히스토리
@@ -349,15 +384,10 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
  ;; continue with :config
    (setq org-modules `(org-bibtex
                        org-docview
-                       org-drill
                        org-info
                        org-mouse
-                       org-annotate-fil
                        org-eval
-                       org-toc
-                       org-panel
-                       org-screen
-                       org-collector))
+                       org-screen))
    (org-load-modules-maybe t)) ;;use-package org Ends
  #+END_SRC
 
@@ -426,6 +456,13 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 
 ;; orgmode에서 LaTeX로 export할 때에는 기본적으로 label을 자동으로 생성해서 사용하므로, \ref 등을 사용하는 데에 어려움이 있습니다. 사용자 지정 label을 사용할 수 있게 설정을 바꾸어 줍니다.
 (setq org-latex-prefer-user-labels t)
+#+END_SRC
+
+[[http://gohugo.io/][Hugo]]로 출판하는 데에 쓰이는 [[https://ox-hugo.scripter.co/][ox-hugo]] 관련 설정입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ox-hugo
+  :after ox)
 #+END_SRC
 
 ** 시스템 관련

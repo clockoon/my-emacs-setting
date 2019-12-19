@@ -748,14 +748,21 @@ Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니�
 ** 꾸미기
 
 *** 테마
-현재 설정에서  선택 가능한 테마는 gruvbox입니다.
+현재 설정에서  선택 가능한 테마는 gruvbox, seoul256입니다.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package gruvbox-theme
-  :config
+  :init
   (load-theme 'gruvbox t))
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package seoul256-theme
+  :init
+  (setq seoul256-background 233
+      seoul256-alternate-background 252)
+  (load-theme 'seoul256 t))
+#+END_SRC
 *** smart-mode-line
 
 #+BEGIN_SRC emacs-lisp :tangle yes

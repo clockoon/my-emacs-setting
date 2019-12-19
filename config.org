@@ -498,7 +498,7 @@ winner-mode는 윈도우 레이아웃 상태를 저장하고, 레이아웃 간�
 
 ** 인터페이스
 Emacs를 편하게 사용하기 위한 인터페이스 관련 패키지들의 모음입니다.
-*** helm
+*** COMMENT helm
 
     [[https://github.com/emacs-helm/helm][Helm]]은 Emacs의 자동완성 기능을 확장시켜 주는 패키지입니다. 다양한 기능을 제공하고 있지만, 그 반대급부로 구동이 무거워지는 단점이 있어서 많은 사람들은 Ivy 등의 대안을 선택하기도 합니다(참고: [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][From helm, to ivy]], [[http://blog.binchen.org/posts/hello-ivy-mode-bye-helm.html][Hello Ivy-mode, bye Helm]] 등).
 
@@ -530,7 +530,39 @@ Emacs를 편하게 사용하기 위한 인터페이스 관련 패키지들의 �
 	 
 	  ))
  #+END_SRC
-
+*** ivy
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ivy
+  :diminish (ivy-mode . "")
+  :init (ivy-mode 1) ;;global setup
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (setq ivy-count-format "%d/%d "))
+(use-package swiper
+  :ensure t
+  :config
+  ;; enable this if you want `swiper' to use it
+  (setq search-default-mode #'char-fold-to-regexp))
+(use-package counsel
+  :ensure t
+  :config
+  (global-set-key "\C-s" 'swiper)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "<f6>") 'ivy-resume)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (global-set-key (kbd "C-c g") 'counsel-git)
+  (global-set-key (kbd "C-c j") 'counsel-git-grep)
+  (global-set-key (kbd "C-c k") 'counsel-ag)
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+#+END_SRC
 *** writeroom-mode
 Emacs를 전체화면으로 표시하고, 불필요한 요소들은 숨겨서 글쓰기에 집중할 수 있도록 하는 모드입니다.
 

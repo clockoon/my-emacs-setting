@@ -13,6 +13,13 @@
 ;; REF: https://github.com/rememberYou/.emacs.d/
 (setq gc-cons-threshold (* 50 1000 1000))
 
+;;
+;; This starts the Emacs server when .emacs gets loaded
+;;
+;; REF: https://www.emacswiki.org/emacs/WThirtyTwoServerMode 
+(require 'server)
+(if (not (server-running-p)) (server-start))
+
 (setq package--init-file-ensured 't) ;; prevent writing (package-initilize) on init.el
 (package-initialize) ;; package-installed-p 때문에 초기화 필요
 

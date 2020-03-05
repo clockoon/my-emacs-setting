@@ -317,6 +317,7 @@ Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파
   (condition-case nil
       (package-install 'use-package)
     (error
+     (package-initialize)
      (package-refresh-contents)
      (package-install 'use-package))))
 

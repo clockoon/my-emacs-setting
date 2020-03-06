@@ -39,13 +39,6 @@
   (write-region "" nil custom-file))
 (load custom-file)
 
-(setq package--init-file-ensured 't) ;; prevent writing (package-initilize) on init.el
-(package-initialize) ;; package-installed-p 때문에 초기화 필요
-
-;; 초기 설정: org-mode가 설치되어 있지 않을 경우 'freshstart.el' 파일을 불러들여 진행
-(when (not (package-installed-p 'org))
-  (load-file (expand-file-name "freshstart.el" user-emacs-directory)))
-
 ;; Faster startup: use converted .el file from .org, it exists
 ;; it automatically syncs by using 'emacs-sync' package: explained in config.org
 (if (file-exists-p (expand-file-name "config.el" user-emacs-directory))

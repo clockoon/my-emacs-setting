@@ -46,29 +46,135 @@ Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합�
 
 * 기본 설정
 
+** 서버
+설정을 로딩하는 시간을 절약하기 위해, 이 설정은 Emacs를 서버-클라이언트 형태로 실행하는 방식을 지원합니다(엄밀히 말해서 실행속도는 변하지 않지만, 서버-클라이언트 방식은 한번 로딩이 끝나면 클라이언트를 여러 개 실행해도 다시 로딩할 필요가 없다는 장점이 있습니다).
+
+서버를 사용하려면 설정 경로에 하위 디렉토리 =./server= 가 포함되어야 합니다. 이 때 Windows는 폴더 소유자 문제가 발생할 수 있으므로, 이를 해결해 줍니다.
+
+참고:
+1. https://www.emacswiki.org/emacs/WThirtyTwoServerMode
+2. https://stackoverflow.com/questions/885793/emacs-error-when-calling-server-start
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq server-directory (expand-file-name "server" user-emacs-directory))
+(unless (file-directory-p server-directory)
+  (make-directory server-directory))
+(if (eq system-type 'windows-nt)
+    (shell-command (concat "takeown /r /d y /f " (subst-chat-in-string ?/ ?\\ server-directory)))
+    (shell-command (concat "chmod 700 " server-directory)))
+
+;; This starts the Emacs server when .emacs gets loaded
+;;
+;; REF: https://www.emacswiki.org/emacs/WThirtyTwoServerMode 
+(require 'server)
+(if (not (server-running-p)) (server-start))
+
+#+END_SRC
+
+서버로 Emacs를 실행할 경우 기본적인 =C-x C-c= 단축키를 사용하면 서버 자체가 죽어버리기 위해, 이를 방지하기 위해 기본적으로 클라이언트 프레임만 닫고 서버를 죽이는 함수를 따로 생성합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;  This changes C-x C-c to just hide Emacs until the next
+;;  time you use it.  We rebind C-M-c to be the command to
+;;  really kill Emacs.
+(defun my-done ()
+  "Exit server buffers and hide the main Emacs window"
+  (interactive)
+  (server-edit)
+  (make-frame-invisible nil t))
+
+(global-set-key (kbd "C-x C-c") 'my-done)
+(global-set-key (kbd "C-M-c") 'save-buffers-kill-emacs)
+#+END_SRC
+
+** 속도
+Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 개선하면 실행 속도를 높일 수 있습니다. 그 향상속도에 대해서는 논쟁의 여지가 많지만, 무거운 작업에서 일시적으로 값을 높이는 것 자체는 합리적으로 보입니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Faster startup: adjusting the frequency of garbage collection
+;; REF: https://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
+(defun my-minibuffer-setup-hook ()
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun my-minibuffer-exit-hook ()
+  (setq gc-cons-threshold 800000))
+
+(add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+#+END_SRC
+
+
+** 프록시
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; set user file and open: storing user setting e.g. proxy
+(setq proxy-file (expand-file-name "user-proxy.el" user-emacs-directory))
+(unless (file-exists-p proxy-file)
+  (if (y-or-n-p "Do you need proxy setting?")
+    (progn
+      (setq my/http-proxy (read-string "Input http-proxy: "))
+      (setq my/https-proxy (read-string "Input https-proxy: "))
+      (write-region 
+        (concat 
+          ";; proxy setting\n"
+          "(setq url-proxy-services \n"
+          "     '((\"no_proxy\" . \"^\\\\(localhost\\\\|10\\\\..*\\\\|192\\\\.168\\\\..*\\\\)\")\n"
+          "     (\"http\" . \"" my/http-proxy "\")\n"
+          "     (\"https\" . \"" my/https-proxy "\")))") nil proxy-file))            
+      (write-region "" nil proxy-file)))
+(load proxy-file)
+
+#+END_SRC
+
 ** (기본) 패키지 설정
 
 우선 패키지를 초기화하고, 설정에 필요한 저장소를 추가합니다.
 
+참고:
+1. https://github.com/jwiegley/use-package/issues/219#issuecomment-108882966
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
-(setq package--init-file-ensured 't)
+(setq
+ ;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
+ package--init-file-ensured 't
+ ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
+ kill-buffer-query-functions nil
+ ;; 패키지 저장소 추가
+ ;; 저장소: MELPA, MARMALADE, ORG-MODE, GNU, user42
+ package-archives
+ '(("melpa-stable" . "http://stable.melpa.org/packages/")
+   ("melpa" . "http://melpa.org/packages/")
+   ("marmalade"   . "http://marmalade-repo.org/packages/")
+   ("org"         . "http://orgmode.org/elpa/")
+   ("gnu"         . "http://elpa.gnu.org/packages/")
+   ("user42"      . "https://download.tuxfamily.org/user42/elpa/packages/")))
 
-(setq kill-buffer-query-functions nil) ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
-
-;; 패키지 저장소 추가
-;; 저장소: MELPA, ORG-MODE, user42
-(when (not (assoc-default "melpa" package-archives))
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
-(when (not (assoc-default "org" package-archives))
-  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
-(when (not (assoc-default "user42" package-archives))
-  (add-to-list 'package-archives '("user42" . "https://download.tuxfamily.org/user42/elpa/packages/") t))
-
-(package-initialize) ;; 패키지 초기화
+;; 컴파일이 필요할 때에만 package를 불러옵니다.
+(eval-when-compile
+  (require 'package)
+  (package-initialize t))
+;; 구 버전 패키지를 저장하지 않습니다.
+(unless (boundp 'package-pinned-packages)
+  (setq package-pinned-packages ()))
 #+END_SRC
  
-이 설정파일에서는 [[https://github.com/jwiegley/use-package][use-package]]를 사용해 패키지를 관리합니다. 기본적인 방식에 비해 use-package는 더 강력하고 효율적이며 빠르게 패키지를 관리할 수 있습니다. 아울러 패키지의 자동 업데이트를 위해 [[https://github.com/rranelli/auto-package-update.el][auto-package-update.el]]을 사용합니다. 이에 대한 설정은 [[패키지 설정]] 섹션을 참고하십시오.
+이 설정파일에서는 [[https://github.com/jwiegley/use-package][use-package]]를 사용해 패키지를 관리합니다. 기본적인 방식에 비해 use-package는 더 강력하고 효율적이며 빠르게 패키지를 관리할 수 있습니다. 아울러 패키지의 자동 업데이트를 위해 [[https://github.com/rranelli/auto-package-update.el][auto-package-update.el]]을 사용합니다.
+
+*** use-package 설치
+
+패키지 관리를 위해 사용할 use-package를 설치합니다.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; 설치 여부를 확인하고 없을 경우 설치합니다.
+;; use-package는 따로 require를 하지 않아도 설치만으로 실행할 수 있습니다.
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
+(setq use-package-verbose t) 
+;; use-package에서 불러오는 패키지가 설치되었는지 항상 확인하고, 설치되어 있지 않으면 자동으로 다운받아 설치합니다.
+(setq use-package-always-ensure t)
+#+END_SRC
 
 ** 한국어 설정
 
@@ -301,31 +407,11 @@ Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파
 
 * 패키지 설정
 
-이 섹션에서는 패키지들을 설치하거나 설정합니다. 패키지의 효율적인 관리를 위해 [[https://github.com/jwiegley/use-package][use-packag]]e를 사용합니다. 또한, .org 형식의 파일을 읽어들이기 위해 org-mode도 설치되었다고 가정합니다. 처음 이 설정파일을 적용하면, =freshstart.el= 파일을 실행해 org-mode를 설치하도록 합니다.
+이 섹션에서는 패키지들을 설치하거나 설정합니다. 패키지의 효율적인 관리를 위해 [[https://github.com/jwiegley/use-package][use-package]]를 사용합니다. 또한, .org 형식의 파일을 읽어들이기 위해 org-mode도 설치되었다고 가정합니다. 처음 이 설정파일을 적용하면, =freshstart.el= 파일을 실행해 org-mode를 설치하도록 합니다.
 
 ** use-package
 
-가장 기본적으로 필요한 use-package를 설치합니다.
-
-참고:
-1. https://github.com/jwiegley/use-package
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; 설치 여부를 확인하고 없을 경우 설치합니다.
-;; use-package는 따로 require를 하지 않아도 설치만으로 실행할 수 있습니다.
-(when (not (package-installed-p 'use-package))
-  (condition-case nil
-      (package-install 'use-package)
-    (error
-     (package-initialize)
-     (package-refresh-contents)
-     (package-install 'use-package))))
-
-;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
-(setq use-package-verbose t) 
-;; use-package에서 불러오는 패키지가 설치되었는지 항상 확인하고, 설치되어 있지 않으면 자동으로 다운받아 설치합니다.
-(setq use-package-always-ensure t)
-#+END_SRC
+use-package를 설치하는 방법에 관한 내용은 [[use-package 설치]]를 참조하세요.
 
 *** 기본 명령어
 아래 코드들에 포함된 옵션들에 대한 간단한 설명입니다.

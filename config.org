@@ -60,7 +60,7 @@ Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합�
 (unless (file-directory-p server-directory)
   (make-directory server-directory))
 (if (eq system-type 'windows-nt)
-    (shell-command (concat "takeown /r /d y /f " (subst-chat-in-string ?/ ?\\ server-directory)))
+    (shell-command (concat "takeown /r /d y /f " (subst-char-in-string ?/ ?\\ server-directory)))
     (shell-command (concat "chmod 700 " server-directory)))
 
 ;; This starts the Emacs server when .emacs gets loaded

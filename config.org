@@ -138,12 +138,13 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
  package--init-file-ensured 't
  ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
  kill-buffer-query-functions nil
+ ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
+ load-prefer-newer t
  ;; 패키지 저장소 추가
  ;; 저장소: MELPA, MARMALADE, ORG-MODE, GNU, user42
  package-archives
  '(("melpa-stable" . "http://stable.melpa.org/packages/")
    ("melpa" . "http://melpa.org/packages/")
-   ("marmalade"   . "http://marmalade-repo.org/packages/")
    ("org"         . "http://orgmode.org/elpa/")
    ("gnu"         . "http://elpa.gnu.org/packages/")
    ("user42"      . "https://download.tuxfamily.org/user42/elpa/packages/")))
@@ -567,11 +568,11 @@ Emacs Lisp 컴파일러는 인간이 해독할 수 있는 소스 코드(.el) 파
 Emacs에는 Lisp 라이브러리를 전부 바이트 컴파일시켜주는 [[https://github.com/emacscollective/auto-compile][패키지]]가 있으므로, 그것을 사용합니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+;; load-prefer-newer 옵션은 파일 첫 부분으로 올립니다.
 (use-package auto-compile
   :config 
   (auto-compile-on-load-mode)
-  (auto-compile-on-save-mode)
-  (setq load-prefer-newer t)) ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
+  (auto-compile-on-save-mode)) 
 #+END_SRC
 
 *** winner

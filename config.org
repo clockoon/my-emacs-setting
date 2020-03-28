@@ -146,13 +146,12 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
  '(("melpa-stable" . "http://stable.melpa.org/packages/")
    ("melpa" . "http://melpa.org/packages/")
    ("org"         . "http://orgmode.org/elpa/")
-   ("gnu"         . "http://elpa.gnu.org/packages/")
-   ("user42"      . "https://download.tuxfamily.org/user42/elpa/packages/")))
+   ("gnu"         . "http://elpa.gnu.org/packages/")))
 
-;; 컴파일이 필요할 때에만 package를 불러옵니다.
-(eval-when-compile
+(eval-when-compile 
   (require 'package)
   (package-initialize t))
+
 ;; 구 버전 패키지를 저장하지 않습니다.
 (unless (boundp 'package-pinned-packages)
   (setq package-pinned-packages ()))
@@ -166,10 +165,20 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; 설치 여부를 확인하고 없을 경우 설치합니다.
-;; use-package는 따로 require를 하지 않아도 설치만으로 실행할 수 있습니다.
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
+;; 에러가 발생할 경우 elpa 폴더를 제거하고 처음부터 다시 설치합니다.
+(eval-when-compile
+  (condition-case nil
+      (require 'use-package)
+    (error 
+      (message "Use-package error; re-initializing...")
+      ;(delete-directory "~/.emacs.d/elpa" t)
+      (package-initialize)
+      (package-install 'use-package)
+      (require 'use-package))))
 
 ;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
 (setq use-package-verbose t) 

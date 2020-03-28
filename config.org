@@ -455,7 +455,6 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package org
-  :defer t
   :config
   ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
   (setq org-support-shift-select t) 
@@ -500,13 +499,11 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 
  #+BEGIN_SRC emacs-lisp :tangle no
  (use-package ox-mediawiki
-   :defer t
    )
  #+END_SRC
 
  #+BEGIN_SRC emacs-lisp :tangle no
  (use-package org-journal
-   :defer t
    :config
    (setq org-journal-dir "~/Dropbox/Texts/orgs/journal/")
    )
@@ -589,7 +586,6 @@ winner-mode는 윈도우 레이아웃 상태를 저장하고, 레이아웃 간�
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package winner
-  :defer t
   :config (winner-mode))
 #+END_SRC
 
@@ -707,7 +703,6 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package treemacs
   :ensure t
-  :defer t
   :requires (f s dash ace-window pfuture ht hydra)
   :bind
   (:map global-map
@@ -759,7 +754,6 @@ AUCTeX는 Emacs에서 더 편하게 LaTeX 파일을 편집하도록 도와주는
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package tex
-  :defer t
   :ensure auctex ;; auctex.el이 자동으로 로드되지 않는 문제 해결
   :config
   (setq TeX-auto-save t))
@@ -780,7 +774,6 @@ AUCTeX는 Emacs에서 더 편하게 LaTeX 파일을 편집하도록 도와주는
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package guide-key
-  :defer t
   :diminish guide-key-mode
   :config
   (progn
@@ -823,8 +816,7 @@ AUCTeX는 Emacs에서 더 편하게 LaTeX 파일을 편집하도록 도와주는
 
 *** php-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package php-mode
-  :defer t)
+(use-package php-mode)
 #+END_SRC
 
 *** pdf-tools
@@ -832,7 +824,6 @@ Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니�
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package pdf-tools
-  :defer t
   :config
   (pdf-tools-install)
   (cond ;;; OS check: setting epdfinfo setting depends on OS

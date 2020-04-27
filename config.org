@@ -866,10 +866,13 @@ Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니�
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package smart-mode-line
-  :init
-  (use-package smart-mode-line-powerline-theme)
   :config
-  (setq sml/theme 'dark)
+  (setq sml/no-confirm-load-theme t)
+  (setq sml/theme 'respectful)
+  (setq sml/name-width 20)
+  (setq sml/mode-width 'full)
+  (setq sml/shorten-directory t)
+  (setq sml/shorten-modes t)
   (sml/setup)
   (my/select-kr-font "c"))
 #+END_SRC

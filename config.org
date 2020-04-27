@@ -725,6 +725,17 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
 
 #+END_SRC
 
+*** eyebrowse
+[[https://github.com/wasamasa/eyebrowse][eyebrowse]]는 Emacs에서 기본으로 제공하는 [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Configuration-Registers.html][윈도우 배열 관리]]를 더 쉽게 해 주는 패키지입니다. 모드 라인에 현재 윈도우 설정을 표시하며, 레이아웃 간의 전환을 위한 명령을 추가해 줍니다.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package eyebrowse
+  :init
+   (add-to-list 'window-persistent-parameters '(window-side . writable))
+   (add-to-list 'window-persistent-parameters '(window-slot . writable))
+  :config
+   (eyebrowse-mode t)
+)
+#+END_SRC
 ** magit
 magit은 Emacs 상에서 Git 파일을 관리하는 솔루션입니다.
 

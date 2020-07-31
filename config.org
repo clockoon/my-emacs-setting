@@ -127,12 +127,27 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 
 ** (기본) 패키지 설정
 
+이 설정파일에서는 패키지 관리를 위해 straight.elel을 el을 사용합니다. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+END_SRC
 우선 패키지를 초기화하고, 설정에 필요한 저장소를 추가합니다.
 
 참고:
 1. https://github.com/jwiegley/use-package/issues/219#issuecomment-108882966
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq
  ;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
  package--init-file-ensured 't
@@ -163,7 +178,13 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 
 패키지 관리를 위해 사용할 use-package를 설치합니다.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC 
+(setq straight-use-package-by-default t)
+(straight-use-package 'use-package)
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; 설치 여부를 확인하고 없을 경우 설치합니다.
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -632,12 +653,10 @@ Emacs를 편하게 사용하기 위한 인터페이스 관련 패키지들의 �
   (setq enable-recursive-minibuffers t)
   (setq ivy-count-format "%d/%d "))
 (use-package swiper
-  :ensure t
   :config
   ;; enable this if you want `swiper' to use it
   (setq search-default-mode #'char-fold-to-regexp))
 (use-package counsel
-  :ensure t
   :config
   (global-set-key "\C-s" 'swiper)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
@@ -702,7 +721,6 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package treemacs
-  :ensure t
   :requires (f s dash ace-window pfuture ht hydra)
   :bind
   (:map global-map
@@ -715,12 +733,10 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
 
 ;; magit과 연동되는 treemacs-magit 패키지 설치
 (use-package treemacs-magit
-  :after treemacs magit
-  :ensure t) 
+  :after treemacs magit) 
 ;; 아이콘 설치
 (use-package treemacs-icons-dired
   :after treemacs dired
-  :ensure t
   :config (treemacs-icons-dired-mode))
 
 #+END_SRC
@@ -752,7 +768,6 @@ magit은 Emacs 상에서 Git 파일을 관리하는 솔루션입니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package markdown-mode
-  :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -808,9 +823,8 @@ AUCTeX는 Emacs에서 더 편하게 LaTeX 파일을 편집하도록 도와주는
 
 *** mediawiki
 
-#+BEGIN_SRC emacs-lisp :tangle
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package mediawiki
-  :ensure t
   :defer 2
   )
 #+END_SRC

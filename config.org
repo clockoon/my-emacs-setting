@@ -105,7 +105,10 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 
 
 ** 프록시
-#+BEGIN_SRC emacs-lisp :tangle yes
+
+   회사 환경 등 프록시를 필요로 하는 환경에 대해 설정을 진행합니다.
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
 ;; set user file and open: storing user setting e.g. proxy
 (setq proxy-file (expand-file-name "user-proxy.el" user-emacs-directory))
 (unless (file-exists-p proxy-file)
@@ -178,10 +181,11 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 
 패키지 관리를 위해 사용할 use-package를 설치합니다.
 
-#+BEGIN_SRC 
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq straight-use-package-by-default t)
 (straight-use-package 'use-package)
-
+;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
+(setq use-package-verbose t) 
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -780,7 +784,7 @@ AUCTeX는 Emacs에서 더 편하게 LaTeX 파일을 편집하도록 도와주는
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package tex
-  :ensure auctex ;; auctex.el이 자동으로 로드되지 않는 문제 해결
+  :straight auctex   ;; auctex.el이 자동으로 로드되지 않는 문제 해결
   :config
   (setq TeX-auto-save t))
 #+END_SRC

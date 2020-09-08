@@ -151,28 +151,32 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 1. https://github.com/jwiegley/use-package/issues/219#issuecomment-108882966
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(setq
- ;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
- package--init-file-ensured 't
- ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
- kill-buffer-query-functions nil
- ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
- load-prefer-newer t
- ;; 패키지 저장소 추가
- ;; 저장소: MELPA, MARMALADE, ORG-MODE, GNU, user42
- package-archives
- '(("melpa-stable" . "http://stable.melpa.org/packages/")
-   ("melpa" . "http://melpa.org/packages/")
-   ("org"         . "http://orgmode.org/elpa/")
-   ("gnu"         . "http://elpa.gnu.org/packages/")))
+    (setq
+     ;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
+     package--init-file-ensured 't
+     ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
+     kill-buffer-query-functions nil
+     ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
+     load-prefer-newer t
+     ;; 패키지 저장소 추가
+     ;; 저장소: MELPA, MARMALADE, ORG-MODE, GNU, user42
+     package-archives
+     '(("melpa-stable" . "http://stable.melpa.org/packages/")
+       ("melpa" . "http://melpa.org/packages/")
+       ("gnu"         . "http://elpa.gnu.org/packages/")))
+;; org 저장소 미러 추가
+  (condition-case nil
+      (add-to-list 'package-archives '("org"         . "http://orgmode.org/elpa/"))
+      (error
+	 (add-to-list 'package-archives '("org"   . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/org/"))))
 
-(eval-when-compile 
-  (require 'package)
-  (package-initialize t))
+    (eval-when-compile 
+      (require 'package)
+      (package-initialize t))
 
-;; 구 버전 패키지를 저장하지 않습니다.
-(unless (boundp 'package-pinned-packages)
-  (setq package-pinned-packages ()))
+    ;; 구 버전 패키지를 저장하지 않습니다.
+    (unless (boundp 'package-pinned-packages)
+      (setq package-pinned-packages ()))
 #+END_SRC
  
 이 설정파일에서는 [[https://github.com/jwiegley/use-package][use-package]]를 사용해 패키지를 관리합니다. 기본적인 방식에 비해 use-package는 더 강력하고 효율적이며 빠르게 패키지를 관리할 수 있습니다. 아울러 패키지의 자동 업데이트를 위해 [[https://github.com/rranelli/auto-package-update.el][auto-package-update.el]]을 사용합니다.

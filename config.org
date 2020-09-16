@@ -489,7 +489,7 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
      (straight-use-package 'org-plus-contrib)
    (error
   (straight-use-package '(org-plus-contrib
-			:type git :repo "bzg/org-mode"
+			:type git :host github :repo "bzg/org-mode"
 		      :local-repo "org" :files (:defaults "contrib/lisp/*.el")))))
 
        (use-package org-plus-contrib

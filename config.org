@@ -133,17 +133,17 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 이 설정파일에서는 패키지 관리를 위해 straight.elel을 el을 사용합니다. 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 5))
+       (unless (file-exists-p bootstrap-file)
+	 (with-current-buffer
+	     (url-retrieve-synchronously "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+					 'silent 'inhibit-cookies)
+	   (goto-char (point-max))
+	   (eval-print-last-sexp)))
+       (load bootstrap-file nil 'nomessage))
 #+END_SRC
 우선 패키지를 초기화하고, 설정에 필요한 저장소를 추가합니다.
 
@@ -151,106 +151,106 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 1. https://github.com/jwiegley/use-package/issues/219#issuecomment-108882966
 
 #+BEGIN_SRC emacs-lisp :tangle no
-    (setq
-     ;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
-     package--init-file-ensured 't
-     ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
-     kill-buffer-query-functions nil
-     ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
-     load-prefer-newer t
-     ;; 패키지 저장소 추가
-     ;; 저장소: MELPA, MARMALADE, ORG-MODE, GNU, user42
-     package-archives
-     '(("melpa-stable" . "http://stable.melpa.org/packages/")
-       ("melpa" . "http://melpa.org/packages/")
-       ("gnu"         . "http://elpa.gnu.org/packages/")))
-;; org 저장소 미러 추가
+  (setq
+   ;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
+   package--init-file-ensured 't
+   ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
+   kill-buffer-query-functions nil
+   ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
+   load-prefer-newer t
+   ;; 패키지 저장소 추가
+   ;; 저장소: MELPA, MARMALADE, ORG-MODE, GNU, user42
+   package-archives
+   '(("melpa-stable" . "http://stable.melpa.org/packages/")
+     ("melpa" . "http://melpa.org/packages/")
+     ("gnu"         . "http://elpa.gnu.org/packages/")))
+  ;; org 저장소 미러 추가
   (condition-case nil
       (add-to-list 'package-archives '("org"         . "http://orgmode.org/elpa/"))
-      (error
-	 (add-to-list 'package-archives '("org"   . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/org/"))))
+    (error
+     (add-to-list 'package-archives '("org"   . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/org/"))))
 
-    (eval-when-compile 
-      (require 'package)
-      (package-initialize t))
+  (eval-when-compile 
+    (require 'package)
+    (package-initialize t))
 
-    ;; 구 버전 패키지를 저장하지 않습니다.
-    (unless (boundp 'package-pinned-packages)
-      (setq package-pinned-packages ()))
+  ;; 구 버전 패키지를 저장하지 않습니다.
+  (unless (boundp 'package-pinned-packages)
+    (setq package-pinned-packages ()))
 #+END_SRC
  
 이 설정파일에서는 [[https://github.com/jwiegley/use-package][use-package]]를 사용해 패키지를 관리합니다. 기본적인 방식에 비해 use-package는 더 강력하고 효율적이며 빠르게 패키지를 관리할 수 있습니다. 아울러 패키지의 자동 업데이트를 위해 [[https://github.com/rranelli/auto-package-update.el][auto-package-update.el]]을 사용합니다.
 
 *** use-package 설치
 
-패키지 관리를 위해 사용할 use-package를 설치합니다.
+    패키지 관리를 위해 사용할 use-package를 설치합니다.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq straight-use-package-by-default t)
-(straight-use-package 'use-package)
-;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
-(setq use-package-verbose t) 
-#+END_SRC
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (setq straight-use-package-by-default t)
+      (straight-use-package 'use-package)
+      ;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
+      (setq use-package-verbose t) 
+    #+END_SRC
 
-#+BEGIN_SRC emacs-lisp :tangle no
-;; 설치 여부를 확인하고 없을 경우 설치합니다.
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+    #+BEGIN_SRC emacs-lisp :tangle no
+      ;; 설치 여부를 확인하고 없을 경우 설치합니다.
+      (unless (package-installed-p 'use-package)
+	(package-refresh-contents)
+	(package-install 'use-package))
 
-;; 에러가 발생할 경우 elpa 폴더를 제거하고 처음부터 다시 설치합니다.
-(eval-when-compile
-  (condition-case nil
-      (require 'use-package)
-    (error 
-      (message "Use-package error; re-initializing...")
-      ;(delete-directory "~/.emacs.d/elpa" t)
-      (package-initialize)
-      (package-install 'use-package)
-      (require 'use-package))))
+      ;; 에러가 발생할 경우 elpa 폴더를 제거하고 처음부터 다시 설치합니다.
+      (eval-when-compile
+	(condition-case nil
+	    (require 'use-package)
+	  (error 
+	   (message "Use-package error; re-initializing...")
+					      ;(delete-directory "~/.emacs.d/elpa" t)
+	   (package-initialize)
+	   (package-install 'use-package)
+	   (require 'use-package))))
 
-;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
-(setq use-package-verbose t) 
-;; use-package에서 불러오는 패키지가 설치되었는지 항상 확인하고, 설치되어 있지 않으면 자동으로 다운받아 설치합니다.
-(setq use-package-always-ensure t)
-#+END_SRC
+      ;; 로딩 속도가 느린 패키지는 *message* 버퍼에 표시합니다. 
+      (setq use-package-verbose t) 
+      ;; use-package에서 불러오는 패키지가 설치되었는지 항상 확인하고, 설치되어 있지 않으면 자동으로 다운받아 설치합니다.
+      (setq use-package-always-ensure t)
+    #+END_SRC
 
 ** 한국어 설정
 
-Emacs는 기본적으로 한국어 사용을 위한 설정이 되어있지 않습니다. 우선, 한국어/유니코드로 프로그램 환경과 로케일을 맞춥니다.
+   Emacs는 기본적으로 한국어 사용을 위한 설정이 되어있지 않습니다. 우선, 한국어/유니코드로 프로그램 환경과 로케일을 맞춥니다.
 
-참고:
-1. http://wiki.nacyot.com/documents/emacs/#.WVyTxGSPJhE
-2. https://stackoverflow.com/questions/2901541/which-coding-system-should-i-use-in-emacs
+   참고:
+   1. http://wiki.nacyot.com/documents/emacs/#.WVyTxGSPJhE
+   2. https://stackoverflow.com/questions/2901541/which-coding-system-should-i-use-in-emacs
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; Emacs는 기본으로 CJK (한중일) 문자를 인코딩하지만, 이로 인해 유니코드 환경에서는 문제가 발생합니다. 이 옵션은 꺼주는 것이 좋습니다.
-(setq utf-translate-cjk-mode nil) 
+   #+BEGIN_SRC emacs-lisp :tangle yes
+     ;; Emacs는 기본으로 CJK (한중일) 문자를 인코딩하지만, 이로 인해 유니코드 환경에서는 문제가 발생합니다. 이 옵션은 꺼주는 것이 좋습니다.
+     (setq utf-translate-cjk-mode nil) 
 
-;; UTF-8 설정 모음
-(set-language-environment 'utf-8)
-(set-keyboard-coding-system 'utf-8-mac) ;; For old Carbon emacs on OS X only
-(setq locale-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-;; 윈도우 환경에서는 모든 텍스트가 UTF-8로 인코딩되지 않으므로, 클립보드 인코딩을 UTF-8로 하지 않습니다.
-(unless (eq system-type 'windows-nt)
-  (set-selection-coding-system 'utf-8))
-(prefer-coding-system 'utf-8)
+     ;; UTF-8 설정 모음
+     (set-language-environment 'utf-8)
+     (set-keyboard-coding-system 'utf-8-mac) ;; For old Carbon emacs on OS X only
+     (setq locale-coding-system 'utf-8)
+     (set-default-coding-systems 'utf-8)
+     (set-terminal-coding-system 'utf-8)
+     ;; 윈도우 환경에서는 모든 텍스트가 UTF-8로 인코딩되지 않으므로, 클립보드 인코딩을 UTF-8로 하지 않습니다.
+     (unless (eq system-type 'windows-nt)
+       (set-selection-coding-system 'utf-8))
+     (prefer-coding-system 'utf-8)
 
-;; 시간 표시 형식은 영어로 표시해서 호환성을 높입니다.
-(setq system-time-locale "C")
-#+END_SRC
+     ;; 시간 표시 형식은 영어로 표시해서 호환성을 높입니다.
+     (setq system-time-locale "C")
+   #+END_SRC
 
-Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태에서는 OS 내장 IME와 충돌하는 문제가 있습니다. 따라서 기본적인 IME - 한글, 영어, 일본어 - 를 선택하여 쉽게 전환할 수 있는 함수를 내장합니다.
+   Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태에서는 OS 내장 IME와 충돌하는 문제가 있습니다. 따라서 기본적인 IME - 한글, 영어, 일본어 - 를 선택하여 쉽게 전환할 수 있는 함수를 내장합니다.
 
-참고:
-1. https://kldp.org/node/109184
-2. https://stackoverflow.com/questions/34505209/lisp-cycle-through-functions/34505716#34505716
+   참고:
+   1. https://kldp.org/node/109184
+   2. https://stackoverflow.com/questions/34505209/lisp-cycle-through-functions/34505716#34505716
 
-- OSX의 경우, 구름 등의 커스텀 입력기를 사용할 경우 Emacs와 충돌하는 경우가 있습니다.
+   - OSX의 경우, 구름 등의 커스텀 입력기를 사용할 경우 Emacs와 충돌하는 경우가 있습니다.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp :tangle yes
 ;; IME 목록: 2벌식, 3벌식(390 / 391), 일본어
 ;; 다른 언어를 추가하는 것도 가능합니다.
 (defconst *usr-input-method-list* 
@@ -265,7 +265,7 @@ Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태�
 ;; Shift + Space 키를 누르면 IME와 영어 간의 전환을 수행합니다.
 (global-set-key [?\C-\\] 'my/usr-input-index-cycle)
 (global-set-key [?\S- ] 'my/usr-input-method-toggle)
-(global-set-key [?\C-=] 'my/usr-input-method-toggle)
+(global-set-key [?\C-x ?\C-\\] 'my/usr-input-method-toggle)
 
 ;; 현재 IME 상태 변수 설정
 (defvar *usr-input-method--index* 0 "Index of current input method. Default: 2벌식.")
@@ -484,26 +484,30 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 앞에서 썼듯이 org-mode는 초기에 이미 설치되어 있습니다. 따라서 여기서는 이에 대한 설정만을 진행합니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package org
-  :config
-  ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
-  (setq org-support-shift-select t) 
+     ;; org 공식 저장소가 작동하지 않을 경우를 대비하여 깃헙 저장소를 추가합니다.
+   (condition-case nil
+     (straight-use-package 'org-plus-contrib)
+   (error
+  (straight-use-package '(org-plus-contrib
+			:type git :repo "bzg/org-mode"
+		      :local-repo "org" :files (:defaults "contrib/lisp/*.el")))))
 
-  ;; org-mode 문서를, 항목의 깊이에 따라 들여쓰기하도록 설정합니다. 단, 항목의 star는 숨기지 않습니다.
-  (progn
-    (setq org-startup-indented nil)
-    (setq org-hide-leading-stars nil)
-    (setq org-adapt-indentation t)
-  )
-  ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책이며, 이를 부분적으로 구현하기 위해, 유니코드 문자 중에 '보이지 않는 스페이스'를 사용하여 편법으로 부분 강조를 가능하게 합니다.
-  ;; 참고: https://emacs.stackexchange.com/questions/18499/mark-up-only-part-of-a-word/18511
-  (defun my/insert-zero-width-space ()
-    (interactive)
-    (insert-char #x200b))
-  ;; Ctrl + * 를 누르면 강조문자 앞뒤에 해당 문자를 넣을 수 있습니다.
-  (define-key org-mode-map (kbd "C-*") 'my/insert-zero-width-space)
-  ;; 해당 문자를 스페이스와 같은 취급을 하도록 설정을 바꿔줍니다.
-  (setq org-emphasis-regexp-components '(" \t('\"{\x200B" "- \t.,:!?;'\")}\\[\x200B" " \t\r\n,\"'" "." 1))
+       (use-package org-plus-contrib
+       :mode (("\\.org$" . org-mode))
+	   :config
+	   ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
+	   (setq org-support-shift-select t) 
+
+	   ;; org-mode 문서를, 항목의 깊이에 따라 들여쓰기하도록 설정합니다. 단, 항목의 star는 숨기지 않습니다.
+	   (progn
+	     (setq org-startup-indented nil)
+	     (setq org-hide-leading-stars nil)
+	     (setq org-adapt-indentation t)
+	   )
+	   ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책입니다. 따라서 강조문자 양 옆에 (알파벳이 아닌) 멀티바이트 문자가 오더라도 작동하도록 설정을 변경합니다(물론 이는 완전한 해결책은 아니며, 더 합리적인 방법에 대해서는 고민이 필요합니다.
+	 (setcar org-emphasis-regexp-components " \t('\"{[:multibyte:]")
+(setcar (nthcdr 1 org-emphasis-regexp-components) "[:multibyte:]- \t.,:!?;'\")}\\")
+(org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components
 #+END_SRC
 
 *** 모듈

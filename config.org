@@ -265,7 +265,7 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 ;; Shift + Space 키를 누르면 IME와 영어 간의 전환을 수행합니다.
 (global-set-key [?\C-\\] 'my/usr-input-index-cycle)
 (global-set-key [?\S- ] 'my/usr-input-method-toggle)
-(global-set-key [?\C-x ?\C-\\] 'my/usr-input-method-toggle)
+(global-set-key [?\C-x ?\C-\\] [?\S- ])
 
 ;; 현재 IME 상태 변수 설정
 (defvar *usr-input-method--index* 0 "Index of current input method. Default: 2벌식.")

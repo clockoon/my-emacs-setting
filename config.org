@@ -524,6 +524,7 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
                        org-info
                        org-mouse
                        org-eval
+                       org-tempo
                        org-screen))
    (org-load-modules-maybe t)) ;;use-package org Ends
  #+END_SRC

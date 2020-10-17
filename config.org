@@ -610,6 +610,13 @@ Emacs에는 Lisp 라이브러리를 전부 바이트 컴파일시켜주는 [[htt
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; load-prefer-newer 옵션은 파일 첫 부분으로 올립니다.
 (use-package auto-compile
+  :init
+  (setq auto-compile-display-buffer nil)
+  (setq auto-compile-mode-line-counter t)
+  (setq auto-compile-source-recreate-deletes-dest t)
+  (setq auto-compile-toggle-deletes-nonlib-dest t)
+  (setq auto-compile-update-autoloads t)
+  :hook (auto-compile-inhibit-compile . auto-compile-inhibit-compile-detached-git-head)
   :config 
   (auto-compile-on-load-mode)
   (auto-compile-on-save-mode)) 

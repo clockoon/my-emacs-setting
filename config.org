@@ -507,7 +507,7 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 	   ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책입니다. 따라서 강조문자 양 옆에 (알파벳이 아닌) 멀티바이트 문자가 오더라도 작동하도록 설정을 변경합니다(물론 이는 완전한 해결책은 아니며, 더 합리적인 방법에 대해서는 고민이 필요합니다.
 	 (setcar org-emphasis-regexp-components " \t('\"{[:multibyte:]")
 (setcar (nthcdr 1 org-emphasis-regexp-components) "[:multibyte:]- \t.,:!?;'\")}\\")
-(org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components
+(org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 #+END_SRC
 
 *** 모듈

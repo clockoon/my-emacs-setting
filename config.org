@@ -227,27 +227,28 @@ Emacs는 기본적으로 한국어 사용을 위한 설정이 되어있지 않�
 (setq system-time-locale "C")
 #+END_SRC
 
-Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태에서는 OS 내장 IME와 충돌하는 문제가 있습니다. 따라서 기본적인 IME - 한글, 영어, 일본어 - 를 선택하여 쉽게 전환할 수 있는 함수를 내장합니다.
+Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태에서는 OS 내장 IME와 충돌하는 문제가 있습니다. 이 설정에서는 IME와 독립적으로 작동할 수 있도록, 다양한 한글 자판 - 2벌식, 390, 391 - 을 선택하여 쉽게 전환할 수 있는 함수를 내장합니다.
 
-   참고:
-   1. https://kldp.org/node/109184
-   2. https://stackoverflow.com/questions/34505209/lisp-cycle-through-functions/34505716#34505716
+참고:
+1. https://kldp.org/node/109184
+2. https://stackoverflow.com/questions/34505209/lisp-cycle-through-functions/34505716#34505716
 
-   - OSX의 경우, 구름 등의 커스텀 입력기를 사용할 경우 Emacs와 충돌하는 경우가 있습니다.
+- OSX의 경우, 구름 등의 커스텀 입력기를 사용할 경우 Emacs와 충돌하는 경우가 있습니다. 아울러 Karabiner를 사용할 경우, [[https://dimag.ibs.re.kr/home/sangil/2018/mac-os-korean-input/][다음 링크]]를 참고하세요.
+- Windows의 경우, 기본 IME에서는 문제없이 작동하지만 날개셋 등의 서드파티 IME에서는 잘 작동하지 않습니다. Emacs에서는 기본 IME로 전환하고 사용하세요.
 
-   #+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; IME 목록: 2벌식, 3벌식(390 / 391), 일본어
 ;; 다른 언어를 추가하는 것도 가능합니다.
 (defconst *usr-input-method-list* 
-  '("korean-hangul"
-   "korean-hangul390"
-   "korean-hangul3f"
-   "japanese"))
+    '("korean-hangul"
+      "korean-hangul390"
+      "korean-hangul3f"))
+
 (setq default-input-method "korean-hangul") ;; 2벌식을 기본 입력 방식으로 설정
 
 ;; 단축키 설정:
 ;; Ctrl + \ 키를 누르면 IME 간의 전환을 수행합니다.
-;; Shift + Space 키를 누르면 IME와 영어 간의 전환을 수행합니다.
+;; Shift + Space 또는 Ctrl + x Ctrl + \ 키를 누르면 IME와 영어 간의 전환을 수행합니다.
 (global-set-key [?\C-\\] 'my/usr-input-index-cycle)
 (global-set-key [?\S- ] 'my/usr-input-method-toggle)
 (global-set-key [?\C-x ?\C-\\] [?\S- ])
@@ -257,25 +258,23 @@ Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태�
 
 ;; IME 간의 전환 함수
 (defun my/usr-input-index-cycle (&optional skip)
-  "Update `*use-input-method-inex*' by adding SKIP (default 0) and
-wrapping if necessary, then call the function at this index in
-`use-input-ethod-list'."
-  (interactive)
-  (setq *usr-input-method--index* (+ *usr-input-method--index* (or skip 1)))
-  ;; BUG: skips with an absolute value bigger than 1 don't wrap properly.
-  (if (>= *usr-input-method--index* (length *usr-input-method-list*))
-      (setq *usr-input-method--index* 0)
+    "Update `*use-input-method-inex*' by adding SKIP (default 0) and wrapping if necessary, then call the function at this index in `use-input-ethod-list'."
+    (interactive)
+    (setq *usr-input-method--index* (+ *usr-input-method--index* (or skip 1)))
+    ;; BUG: skips with an absolute value bigger than 1 don't wrap properly.
+    (if (>= *usr-input-method--index* (length *usr-input-method-list*))
+    (setq *usr-input-method--index* 0)
     (when (< *usr-input-method--index* 0)
-      (setq *usr-input-method--index* (1- (length *usr-input-method-list*))) ))
-  (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
-  (message "Current IME: %S" (nth *usr-input-method--index* *usr-input-method-list*)) )
+        (setq *usr-input-method--index* (1- (length *usr-input-method-list*))) ))
+    (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
+    (message "Current IME: %S" (nth *usr-input-method--index* *usr-input-method-list*)))
 
 ;; IME - 영어 간의 전환 함수
 (defun my/usr-input-method-toggle ()
-  (interactive)
-  (if (eq current-input-method nil)
-      (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
-    (set-input-method nil)) )
+    (interactive)
+    (if (eq current-input-method nil)
+        (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
+	(set-input-method nil)))
 #+END_SRC
 
 ** 에디터 설정

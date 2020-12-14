@@ -447,8 +447,8 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 	  (use-package org-plus-contrib
 	      :straight (org-plug-contrib :type git :host github :repo "bzg/org-mode"
 			:local-repo "org" :files (:defaults "contrib/lisp/*.el"))
-	      :mode (("\\.org$" . org-mode)))
- :config (my/org-setting)))
+	      :mode (("\\.org$" . org-mode))
+ :config (my/org-setting))))
 
       (defun my/org-setting ()
       "orgmode 설치 후 추가 설정을 진행합니다."
@@ -741,7 +741,7 @@ undo-tree는 버퍼의 변경사항 내역을 저장하고 시각적으로 보�
    (add-to-list 'window-persistent-parameters '(window-slot . writable))
   :config
    (eyebrowse-mode t)
-))
+)))
 #+END_SRC
 ** magit
 magit은 Emacs 상에서 Git 파일을 관리하는 솔루션입니다.

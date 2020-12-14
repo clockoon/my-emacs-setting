@@ -438,30 +438,35 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 앞에서 썼듯이 org-mode는 초기에 이미 설치되어 있습니다. 다만 최신 버전이 아니므로, 업데이트 및 추가 설정을 진행합니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-     ;; org 공식 저장소가 작동하지 않을 경우를 대비하여 깃헙 저장소를 추가합니다.
-   (condition-case nil
-     (use-package org-plus-contrib
-       :mode (("\\.org$" . org-mode)))
-   (error
-  (use-package org-plus-contrib
-      :straight (org-plug-contrib :type git :host github :repo "bzg/org-mode"
-		:local-repo "org" :files (:defaults "contrib/lisp/*.el"))
-      :mode (("\\.org$" . org-mode)))))
-     ;; 설치 후 추가 설정을 진행합니다.
+	     ;; org 공식 저장소가 작동하지 않을 경우를 대비하여 깃헙 저장소를 추가합니다.
+	   (condition-case nil
+	     (use-package org-plus-contrib
+	       :mode (("\\.org$" . org-mode))
+	       :config (my/org-setting))
+	   (error
+	  (use-package org-plus-contrib
+	      :straight (org-plug-contrib :type git :host github :repo "bzg/org-mode"
+			:local-repo "org" :files (:defaults "contrib/lisp/*.el"))
+	      :mode (("\\.org$" . org-mode)))
+ :config (my/org-setting)))
 
-     ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
-	   (setq org-support-shift-select t) 
+      (defun my/org-setting ()
+      "orgmode 설치 후 추가 설정을 진행합니다."
 
-	   ;; org-mode 문서를, 항목의 깊이에 따라 들여쓰기하도록 설정합니다. 단, 항목의 star는 숨기지 않습니다.
-	   (progn
-	     (setq org-startup-indented nil)
-	     (setq org-hide-leading-stars nil)
-	     (setq org-adapt-indentation t)
-	   )
-	   ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책입니다. 따라서 강조문자 양 옆에 (알파벳이 아닌) 멀티바이트 문자가 오더라도 작동하도록 설정을 변경합니다(물론 이는 완전한 해결책은 아니며, 더 합리적인 방법에 대해서는 고민이 필요합니다.
-	 (setcar org-emphasis-regexp-components " \t('\"{[:multibyte:]")
-(setcar (nthcdr 1 org-emphasis-regexp-components) "[:multibyte:]- \t.,:!?;'\")}\\")
-(org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+	     ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
+		   (setq org-support-shift-select t) 
+
+		   ;; org-mode 문서를, 항목의 깊이에 따라 들여쓰기하도록 설정합니다. 단, 항목의 star는 숨기지 않습니다.
+		   (progn
+		     (setq org-startup-indented nil)
+		     (setq org-hide-leading-stars nil)
+		     (setq org-adapt-indentation t)
+		   )
+		   ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책입니다. 따라서 강조문자 양 옆에 (알파벳이 아닌) 멀티바이트 문자가 오더라도 작동하도록 설정을 변경합니다(물론 이는 완전한 해결책은 아니며, 더 합리적인 방법에 대해서는 고민이 필요합니다.
+		 (setcar org-emphasis-regexp-components " \t('\"{[:multibyte:]")
+	(setcar (nthcdr 1 org-emphasis-regexp-components) "[:multibyte:]- \t.,:!?;'\")}\\")
+	(org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+      ; my/org-setting continues below
 #+END_SRC
 
 *** 모듈
@@ -472,7 +477,7 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
  - 참고: Sacha Chua
 
  #+BEGIN_SRC emacs-lisp :tangle yes
- ;; continue with :config
+ ;; continued in my/org-setting
    (setq org-modules `(org-bibtex
                        org-docview
                        org-info
@@ -480,7 +485,7 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
                        org-eval
                        org-tempo
                        org-screen))
-   (org-load-modules-maybe t) ;;use-package org Ends
+   (org-load-modules-maybe t)) ;;use-package org Ends
  #+END_SRC
 
 

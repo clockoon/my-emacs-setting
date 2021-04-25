@@ -314,6 +314,21 @@ Home 및 End 키가 줄의 처음과 끝으로 이동시키도록(각각 C-a, C-
 (global-set-key [end] 'move-end-of-line)
 #+END_SRC
 
+툴바, 메뉴바, 스크롤바를 비활성화합니다.
+
+#+begin_src emacs-lisp :tangle yes
+  ;; ref: https://git.sr.ht/~technomancy/better-defaults
+
+  (unless (eq window-system 'ns)
+    (menu-bar-mode -1))
+  (when (fboundp 'tool-bar-mode)
+    (tool-bar-mode -1))
+  (when (fboundp 'scroll-bar-mode)
+    (scroll-bar-mode -1))
+  (when (fboundp 'horizontal-scroll-bar-mode)
+    (horizontal-scroll-bar-mode -1))
+#+end_src
+
 ** 폰트 설정
 운영체제와 DPI 에 맞추어, 자동으로 텍스트 크기를 조정하는 함수를 설정합니다. 기본적인 폰트는 D2Coding이며, 가독성을 위해 기본 폰트보다 크게 설정되어 있습니다. 더 많은 텍스트를 화면에 표시하고 싶다면 =x-font-height= 값을 조절하면 됩니다.
 
@@ -775,9 +790,22 @@ AUCTeX는 Emacs에서 더 편하게 LaTeX 파일을 편집하도록 도와주는
   :config
   (setq TeX-auto-save t))
 #+END_SRC
+
+*** Asciidoc
+    asciidoc을 지원하기 위한 패키지를 추가합니다.
+    #+begin_src emacs-lisp :tangle yes
+      (use-package adoc-mode
+	:requires markup-faces
+	:mode "\\.adoc?\\'")
+      (use-package markup-faces
+	:config
+        (set-face-attribute 'markup-meta-face nil
+                      :height 1.0
+                      :foreground (face-attribute 'font-lock-comment-face :foreground)))
+    #+end_src
 ** 기타
 
-*** miniedit
+*** Miniedit
 [[https://github.com/emacsorphanage/miniedit][miniedit]] 패키지는 미니버퍼의 편집을 더 빠르게 할 수 있도록 합니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -930,3 +958,16 @@ Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니�
 
 (add-hook 'after-save-hook 'my/config-tangle) ;; 파일을 저장하면 파일을 변환하도록 지정합니다.
 #+END_SRC
+
+이 설정파일은 비주기적으로 업데이트됩니다. 매번 git 저장소에서 수동으로 업데이트하는 불편함을 줄이기 위해, 자동으로 git pull 및 설정 파일 업데이트를 수행하는 함수를 제공합니다.
+
+#+begin_src emacs-lisp :tangle yes
+  (defun my/config-pull ()
+    "설정 파일을 git 저장소에서 pull하여 업데이트 후, 받은 파일을 실행합니다."
+    (interactive)
+    (message "Pull from git repository...")
+    (shell-command "git -C ~/.emacs.d pull")
+    (my/config-tangle)
+    (load "~/.emacs.d/init.el")
+  )
+#+end_src

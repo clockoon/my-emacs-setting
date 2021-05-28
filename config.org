@@ -4,7 +4,6 @@
 #+DATE: 2018-06-02
 
 * 개요
-
 이 설정파일은 GNU Emacs를 빠르고 쉽게 사용하기 위하여 작성되었습니다. 
 
 Emacs는 매우 강력하고 훌륭한 프로그램이지만, 그 방대함은 사용자로 하여금 쉽게 길을 잃게 만듭니다. 따라서 인터넷에 공개된 수많은 Emacs 설정 파일은 그 헤메임의 기록이며, 사람들로 하여금 이정표 역할을 해줍니다. 이 파일도 그 기록 중 하나입니다.
@@ -12,7 +11,6 @@ Emacs는 매우 강력하고 훌륭한 프로그램이지만, 그 방대함은 �
 특별히, 이 파일의 설명은 한국어로 쓰여졌습니다. 이는 공개된 Emacs 설정에 대한 정보를 찾아다니던 중, 한국어로 되어 있는 것이 거의 없으므로 발생하는 어려움에 대한 대응입니다. 물론 Emacs를 사용하는 많은 사람들은 영어로 정보를 습득하는 데 어려움이 없긴 할 것이나, 한편으로는 언어적 장벽이 주는 저변 확대는 무시할 수 없습니다. 더욱이, Emacs는 굳이 프로그래머가 아니더라도 글쓰는 사람들에게 좋은 도구가 되어줍니다. [[http://orgmode.org][org-mode]]를 사용한 정리된 글쓰기, [[https://jblevins.org/projects/deft/][Deft]]의 강력한 파일 관리 기능, 혹은 Emacs 내부에 포함된 여러 기능들은 단지 프로그래머가 아니라 일상적으로 컴퓨터 앞에 앉는 모든 사람들에게 도움이 됩니다. 이 설정파일은, 그러한 사람들에게 도움이 되는 것을 의도하고 있습니다.
 
 ** 목표
-
 이 설정파일은 다음 사항을 목표로 작성됩니다.
 
 1. 한국어 사용자: Emacs는 자체적인 IME를 포함하고 있으며, 매우 훌륭하게 작동합니다. 그러나 바닐라 상태에서 한국어 사용에는 다소 어려움이 있으며, 편리하게 쓰기 위해서는 몇 가지 설정이 필요합니다.
@@ -64,7 +62,7 @@ Emacs에 대한 한글 정보는 다음 사이트를 참고하기를 추천합�
     (shell-command (concat "chmod 700 " server-directory)))
 
 ;; This starts the Emacs server when .emacs gets loaded
-;;
+
 ;; REF: https://www.emacswiki.org/emacs/WThirtyTwoServerMode 
 (require 'server)
 (if (not (server-running-p)) (server-start))
@@ -156,32 +154,32 @@ Emacs는 기본 garbage collection threshold를 작게 잡고 있는데, 이를 
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq
-    ;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
-    package--init-file-ensured 't
-    ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
-    kill-buffer-query-functions nil
-    ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
-    load-prefer-newer t
-    ;; 패키지 저장소 추가
-    ;; 저장소: MELPA, MARMALADE, ORG-MODE, GNU, user42
-    package-archives
-    '(("melpa-stable" . "http://stable.melpa.org/packages/")
-     ("melpa" . "http://melpa.org/packages/")
-     ("gnu"         . "http://elpa.gnu.org/packages/")))
+ ;; 기본적으로 Emacs는 패키지를 설치할 때 관련 정보를 init.el에 기록합니다. 이를 방지하도록 설정합니다.
+ package--init-file-ensured 't
+ ;; org 관련 프로세스가 자동으로 종료될 수 있도록 합니다.
+ kill-buffer-query-functions nil
+ ;; 오래된 버전의 파일을 로드하지 않고 재컴파일하도록 합니다.
+ load-prefer-newer t
+ ;; 패키지 저장소 추가
+ ;; 저장소: MELPA, MARMALADE, ORG-MODE, GNU, user42
+ package-archives
+ '(("melpa-stable" . "http://stable.melpa.org/packages/")
+   ("melpa" . "http://melpa.org/packages/")
+   ("gnu"         . "http://elpa.gnu.org/packages/")))
 ;; org 저장소 미러 추가
 (condition-case nil
     (add-to-list 'package-archives '("org"."http://orgmode.org/elpa/"))
-    (error
-        (add-to-list 'package-archives '("org"."https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/org/"))))
+  (error
+   (add-to-list 'package-archives '("org"."https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/org/"))))
 
 ;; 패키지 로딩 및 초기화
 (eval-when-compile 
-    (require 'package)
-    (package-initialize t))
+  (require 'package)
+  (package-initialize t))
 
 ;; 구 버전 패키지를 저장하지 않습니다.
 (unless (boundp 'package-pinned-packages)
-    (setq package-pinned-packages ()))
+  (setq package-pinned-packages ()))
 #+END_SRC
  
 *** use-package 설치
@@ -220,8 +218,8 @@ Emacs는 기본적으로 한국어 사용을 위한 설정이 되어있지 않�
 (set-terminal-coding-system 'utf-8)
 ;; 윈도우 환경에서는 모든 텍스트가 UTF-8로 인코딩되지 않으므로, 클립보드 인코딩을 UTF-8로 하지 않습니다.
 (unless (eq system-type 'windows-nt)
-    (set-selection-coding-system 'utf-8))
-    (prefer-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8))
+(prefer-coding-system 'utf-8)
 
 ;; 시간 표시 형식은 영어로 표시해서 호환성을 높입니다.
 (setq system-time-locale "C")
@@ -239,10 +237,10 @@ Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태�
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; IME 목록: 2벌식, 3벌식(390 / 391), 일본어
 ;; 다른 언어를 추가하는 것도 가능합니다.
-(defconst *usr-input-method-list* 
-    '("korean-hangul"
-      "korean-hangul390"
-      "korean-hangul3f"))
+(defconst *usr-input-method-list*
+  '("korean-hangul"
+    "korean-hangul390"
+    "korean-hangul3f"))
 
 (setq default-input-method "korean-hangul") ;; 2벌식을 기본 입력 방식으로 설정
 
@@ -258,23 +256,23 @@ Emacs는 기본적으로 한글 IME를 내장하고 있지만, 바닐라 상태�
 
 ;; IME 간의 전환 함수
 (defun my/usr-input-index-cycle (&optional skip)
-    "Update `*use-input-method-inex*' by adding SKIP (default 0) and wrapping if necessary, then call the function at this index in `use-input-ethod-list'."
-    (interactive)
-    (setq *usr-input-method--index* (+ *usr-input-method--index* (or skip 1)))
-    ;; BUG: skips with an absolute value bigger than 1 don't wrap properly.
-    (if (>= *usr-input-method--index* (length *usr-input-method-list*))
-    (setq *usr-input-method--index* 0)
-    (when (< *usr-input-method--index* 0)
-        (setq *usr-input-method--index* (1- (length *usr-input-method-list*))) ))
-    (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
-    (message "Current IME: %S" (nth *usr-input-method--index* *usr-input-method-list*)))
+  "Update `*use-input-method-inex*' by adding SKIP (default 0) and wrapping if necessary, then call the function at this index in `use-input-ethod-list'."
+  (interactive)
+  (setq *usr-input-method--index* (+ *usr-input-method--index* (or skip 1)))
+  ;; BUG: skips with an absolute value bigger than 1 don't wrap properly.
+  (if (>= *usr-input-method--index* (length *usr-input-method-list*))
+  (setq *usr-input-method--index* 0)
+  (when (< *usr-input-method--index* 0)
+    (setq *usr-input-method--index* (1- (length *usr-input-method-list*))) ))
+  (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
+  (message "Current IME: %S" (nth *usr-input-method--index* *usr-input-method-list*)))
 
 ;; IME - 영어 간의 전환 함수
 (defun my/usr-input-method-toggle ()
-    (interactive)
-    (if (eq current-input-method nil)
-        (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
-	(set-input-method nil)))
+  (interactive)
+  (if (eq current-input-method nil)
+      (set-input-method (nth *usr-input-method--index* *usr-input-method-list*))
+    (set-input-method nil)))
 #+END_SRC
 
 ** 에디터 설정
@@ -317,16 +315,16 @@ Home 및 End 키가 줄의 처음과 끝으로 이동시키도록(각각 C-a, C-
 툴바, 메뉴바, 스크롤바를 비활성화합니다.
 
 #+begin_src emacs-lisp :tangle yes
-  ;; ref: https://git.sr.ht/~technomancy/better-defaults
+;; ref: https://git.sr.ht/~technomancy/better-defaults
 
-  (unless (eq window-system 'ns)
-    (menu-bar-mode -1))
-  (when (fboundp 'tool-bar-mode)
-    (tool-bar-mode -1))
-  (when (fboundp 'scroll-bar-mode)
-    (scroll-bar-mode -1))
-  (when (fboundp 'horizontal-scroll-bar-mode)
-    (horizontal-scroll-bar-mode -1))
+(unless (eq window-system 'ns)
+  (menu-bar-mode -1))
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+(when (fboundp 'horizontal-scroll-bar-mode)
+  (horizontal-scroll-bar-mode -1))
 #+end_src
 
 ** 폰트 설정
@@ -360,43 +358,43 @@ Home 및 End 키가 줄의 처음과 끝으로 이동시키도록(각각 C-a, C-
 ;;     ("KW Halfwidth and Fullwidth Forms" #xffe6 #xffe6)))
 
 (defun my/select-kr-font (opt)
-    "화면의 해상도와 dpi에 맞게 폰트 크기를 조절합니다."
-    (when window-system
-        (let* ((attrs (car (display-monitor-attributes-list)))
-	       (size (assoc 'mm-size attrs))
-	       (sizex (cadr size))
-	       (res (cdr (assoc 'geometry attrs)))
-	       (resx (- (cadr (cdr res)) (car res)))
-	       (dpi (* (/ (float resx) sizex) 25.4)))
-	      (cond ((< dpi 110)
-	                (setq x-font-height 16))
-		    ((< dpi 130)
-		        (setq x-font-height 18))
-		    ((< dpi 160)
-		        (setq x-font-height 20))
-		    (t (setq x-font-height 22))))
-	  (cond
-	      ((string= opt "c") ;; "c" means "codding"
-	          (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "IBM Plex Mono" (- x-font-height 1)))
-		  (set-fontset-font "fontset-default" '(#x1100 . #x11ff) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '#x20a9 (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '(#x302e . #x302f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '(#x3130 . #x318f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '(#x3200 . #x321e) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '(#x3260 . #x327f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '(#xa960 . #xa97f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '(#xac00 . #xd7a3) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '(#xd7b0 . #xd7ff) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '(#xffa1 . #xffdc) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
-		  (set-fontset-font "fontset-default" '#xffe6 (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height)))
-	      ((string= opt "s") ;; "s" means serif
-		  (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Noto Serif KR" (- x-font-height 2))))
-	      ((string= opt "ss") ;; "ss" means san-serif
-	          (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Noto Sans CJK KR" (- x-font-height 2)))))
-		  (set-face-attribute 'mode-line nil :font (format "%s:pixelsize=%d" "D2Coding" (- x-font-height 1)))))
+  "화면의 해상도와 dpi에 맞게 폰트 크기를 조절합니다."
+  (when window-system
+    (let* ((attrs (car (display-monitor-attributes-list)))
+	   (size (assoc 'mm-size attrs))
+	   (sizex (cadr size))
+	   (res (cdr (assoc 'geometry attrs)))
+	   (resx (- (cadr (cdr res)) (car res)))
+	   (dpi (* (/ (float resx) sizex) 25.4)))
+      (cond ((< dpi 110)	     
+             (setq x-font-height 16))
+	    ((< dpi 130)
+	     (setq x-font-height 18))
+	    ((< dpi 160)
+	     (setq x-font-height 20))
+	    (t (setq x-font-height 22))))
+    (cond
+     ((string= opt "c") ;; "c" means "codding"
+      (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "IBM Plex Mono" (- x-font-height 1)))
+      (set-fontset-font "fontset-default" '(#x1100 . #x11ff) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '#x20a9 (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '(#x302e . #x302f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '(#x3130 . #x318f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '(#x3200 . #x321e) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '(#x3260 . #x327f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '(#xa960 . #xa97f) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '(#xac00 . #xd7a3) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '(#xd7b0 . #xd7ff) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '(#xffa1 . #xffdc) (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height))
+      (set-fontset-font "fontset-default" '#xffe6 (font-spec :family "D2Coding" :registry "iso10646-1" :size x-font-height)))
+     ((string= opt "s") ;; "s" means serif
+      (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Noto Serif KR" (- x-font-height 2))))
+     ((string= opt "ss") ;; "ss" means san-serif
+      (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Noto Sans CJK KR" (- x-font-height 2)))))
+    (set-face-attribute 'mode-line nil :font (format "%s:pixelsize=%d" "D2Coding" (- x-font-height 1)))))
 #+END_SRC
 
-** 백업/자동저장/히스토리
+** 백업 / 자동저장 / 히스토리
 
 Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파일과 동일한 폴더에 저장합니다. 따라서 Emacs를 사용하다 보면 폴더가 지저분해지는 현상이 발생합니다. 이러한 임시 파일을 한데 모아 이를 방지합니다. 공간이 부족할 경우 해당 폴더들 (backup, auto-save-list, savehist)의 내용물을 비워서 디스크 용량을 확보할 수 있습니다.
 
@@ -438,7 +436,6 @@ Emacs는 기본적으로 백업, 자동저장, 히스토리 파일을 소스 파
 이 섹션에서는 패키지들을 설치하거나 설정합니다. 패키지의 효율적인 관리를 위해 [[https://github.com/jwiegley/use-package][use-package]]를 사용합니다. 또한, .org 형식의 파일을 읽어들이기 위해 org-mode도 설치되었다고 가정합니다. 처음 이 설정파일을 적용하면, =freshstart.el= 파일을 실행해 org-mode를 설치하도록 합니다.
 
 ** use-package
-
 use-package를 설치하는 방법에 관한 내용은 [[use-package 설치]]를 참조하세요.
 
 *** 기본 명령어
@@ -447,79 +444,79 @@ use-package를 설치하는 방법에 관한 내용은 [[use-package 설치]]를
 - =:defer=: Emacs 로드 시 동시에 실행하는 것이 아니라, 필요할 때에만 로드하도록 하여 초기 기동 시간을 절약합니다.
 
 ** org
-
 org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외에도 수많은 기능을 수행할 수 있습니다. 블로그를 작성하는 데에도, 노트를 작성하는 데에도, 스케쥴을 관리하는 데에도, 할일을 정리하는 데에도 쓸 수 있습니다.
 
 앞에서 썼듯이 org-mode는 초기에 이미 설치되어 있습니다. 다만 최신 버전이 아니므로, 업데이트 및 추가 설정을 진행합니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-	     ;; org 공식 저장소가 작동하지 않을 경우를 대비하여 깃헙 저장소를 추가합니다.
-	   (condition-case nil
-	     (use-package org-plus-contrib
-	       :mode (("\\.org$" . org-mode))
-	       :config (my/org-setting))
-	   (error
-	  (use-package org-plus-contrib
-	      :straight (org-plug-contrib :type git :host github :repo "bzg/org-mode"
-			:local-repo "org" :files (:defaults "contrib/lisp/*.el"))
-	      :mode (("\\.org$" . org-mode))
- :config (my/org-setting))))
+;; org 공식 저장소가 작동하지 않을 경우를 대비하여 깃헙 저장소를 추가합니다.
+(condition-case nil
+    (use-package org-plus-contrib
+      :mode (("\\.org$" . org-mode))
+      :config (my/org-setting))
+  (error
+   (use-package org-plus-contrib
+     :straight (org-plug-contrib :type git :host github :repo "bzg/org-mode"
+				 :local-repo "org" :files (:defaults "contrib/lisp/*.el"))
+     :mode (("\\.org$" . org-mode))
+     :config (my/org-setting))))
 
-      (defun my/org-setting ()
-      "orgmode 설치 후 추가 설정을 진행합니다."
+(defun my/org-setting ()
+  "orgmode 설치 후 추가 설정을 진행합니다."
+  ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
+  (setq org-support-shift-select t) 
 
-	     ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
-		   (setq org-support-shift-select t) 
+  ;; org-mode 문서를, 항목의 깊이에 따라 들여쓰기하도록 설정합니다. 단, 항목의 star는 숨기지 않습니다.
+  (progn
+    (setq org-startup-indented nil)
+    (setq org-hide-leading-stars nil)
+    (setq org-adapt-indentation t)
+    (setq org-src-preserve-indentation t)
+    )
 
-		   ;; org-mode 문서를, 항목의 깊이에 따라 들여쓰기하도록 설정합니다. 단, 항목의 star는 숨기지 않습니다.
-		   (progn
-		     (setq org-startup-indented nil)
-		     (setq org-hide-leading-stars nil)
-		     (setq org-adapt-indentation t)
-		   )
-		   ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책입니다. 따라서 강조문자 양 옆에 (알파벳이 아닌) 멀티바이트 문자가 오더라도 작동하도록 설정을 변경합니다(물론 이는 완전한 해결책은 아니며, 더 합리적인 방법에 대해서는 고민이 필요합니다.
-		 (setcar org-emphasis-regexp-components " \t('\"{[:multibyte:]")
-	(setcar (nthcdr 1 org-emphasis-regexp-components) "[:multibyte:]- \t.,:!?;'\")}\\")
-	(org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
-      ; my/org-setting continues below
+  ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책입니다. 따라서 강조문자 양 옆에 (알파벳이 아닌) 멀티바이트 문자가 오더라도 작동하도록 설정을 변경합니다(물론 이는 완전한 해결책은 아니며, 더 합리적인 방법에 대해서는 고민이 필요합니다.
+  (setcar org-emphasis-regexp-components " \t('\"{[:multibyte:]")
+  (setcar (nthcdr 1 org-emphasis-regexp-components) "[:multibyte:]- \t.,:!?;'\")}\\")
+  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+
+; my/org-setting continues below
 #+END_SRC
 
 *** 모듈
 
- org-mode는 기본적으로 많은 모듈을 포함하고 있으므로, 필요한 모듈만 포함시켜 실행 속도를 높입니다. 
+org-mode는 기본적으로 많은 모듈을 포함하고 있으므로, 필요한 모듈만 포함시켜 실행 속도를 높입니다. 
 
- - 어떤 모듈이 있는지는 [[http://c20.kr/wiki/Org-mode#.EB.AA.A8.EB.93.88][다음]]을 참고하세요.
- - 참고: Sacha Chua
+- 어떤 모듈이 있는지는 [[http://c20.kr/wiki/Org-mode#.EB.AA.A8.EB.93.88][다음]]을 참고하세요.
+- 참고: Sacha Chua
 
- #+BEGIN_SRC emacs-lisp :tangle yes
- ;; continued in my/org-setting
-   (setq org-modules `(org-bibtex
-                       org-docview
-                       org-info
-                       org-mouse
-                       org-eval
-                       org-tempo
-                       org-screen))
-   (org-load-modules-maybe t)) ;;use-package org Ends
- #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; continued in my/org-setting
+(setq org-modules `(org-bibtex
+                    org-docview
+                    org-info
+                    org-mouse
+                    org-eval
+                    org-tempo
+                    org-screen))
+(org-load-modules-maybe t)) ;;use-package org Ends
+#+END_SRC
 
 
- 외부 모듈들은 use-package를 사용해 불러옵니다.
+외부 모듈들은 use-package를 사용해 불러옵니다.
 
- #+BEGIN_SRC emacs-lisp :tangle no
- (use-package ox-mediawiki
-   )
- #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package ox-mediawiki)
+#+END_SRC
 
- #+BEGIN_SRC emacs-lisp :tangle no
- (use-package org-journal
-   :config
-   (setq org-journal-dir "~/Dropbox/Texts/orgs/journal/")
-   )
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package org-journal
+  :config
+  (setq org-journal-dir "~/Dropbox/Texts/orgs/journal/")
+  )
  #+END_SRC
 
 *** 출판
- org-mode는 여러 형식으로 org 파일을 출판할 수 있게 합니다. 이 섹션에서는 관련한 설정을 정리합니다.
+org-mode는 여러 형식으로 org 파일을 출판할 수 있게 합니다. 이 섹션에서는 관련한 설정을 정리합니다.
 
 우선 latex 관련 설정입니다.
 
@@ -529,34 +526,34 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
 (with-eval-after-load 'ox-latex
 ;; ** <<Dissertation>>
   (add-to-list 'org-latex-classes
-          '("dissertation"
-             "\\documentclass[12pt,a4paper]{report}"
-             ("\\chapter{%s}" . "\\chapter*{%s}")
-             ("\\section{%s}" . "\\section*{%s}")
-             ("\\subsection{%s}" . "\\subsection*{%s}")
-             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+               '("dissertation"
+		 "\\documentclass[12pt,a4paper]{report}"
+		 ("\\chapter{%s}" . "\\chapter*{%s}")
+		 ("\\section{%s}" . "\\section*{%s}")
+		 ("\\subsection{%s}" . "\\subsection*{%s}")
+		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 ;; ** <<APS journals>>
 ;; ref: https://github.com/jkitchin/jmax
   (add-to-list 'org-latex-classes 
-          '("revtex4-1"
-             "\\documentclass{revtex4-1}
+               '("revtex4-1"
+		 "\\documentclass{revtex4-1}
              [NO-DEFAULT-PACKAGES]
              [PACKAGES]
              [EXTRA]"
-             ("\\section{%s}" . "\\section*{%s}")
-             ("\\subsection{%s}" . "\\subsection*{%s}")
-             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-             ("\\paragraph{%s}" . "\\paragraph*{%s}")
-             ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-)
+		 ("\\section{%s}" . "\\section*{%s}")
+		 ("\\subsection{%s}" . "\\subsection*{%s}")
+		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  )
 
 ;; LaTeX 변환을 위해 필요한 PATH 설정을 추가합니다.
 (getenv "PATH")
 (cond
-  ((eq system-type 'darwin)
-    (setenv "PATH"
-      (concat
-      "/Library/TeX/texbin" ":" (getenv "PATH")))))
+ ((eq system-type 'darwin)
+  (setenv "PATH"
+	  (concat
+	   "/Library/TeX/texbin" ":" (getenv "PATH")))))
 
 ;; pdf 변환 시 bibtex를 제대로 처리하기 위한 설정
 (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "bibtex %b" "xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode --synctex=-1 %f"))
@@ -607,39 +604,10 @@ winner-mode는 윈도우 레이아웃 상태를 저장하고, 레이아웃 간�
 
 ** 인터페이스
 Emacs를 편하게 사용하기 위한 인터페이스 관련 패키지들의 모음입니다.
-*** COMMENT helm
 
-    [[https://github.com/emacs-helm/helm][Helm]]은 Emacs의 자동완성 기능을 확장시켜 주는 패키지입니다. 다양한 기능을 제공하고 있지만, 그 반대급부로 구동이 무거워지는 단점이 있어서 많은 사람들은 Ivy 등의 대안을 선택하기도 합니다(참고: [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][From helm, to ivy]], [[http://blog.binchen.org/posts/hello-ivy-mode-bye-helm.html][Hello Ivy-mode, bye Helm]] 등).
-
- #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package helm
-   :diminish helm-mode
-   :config
-   (progn
-     (require 'helm-config)
-     (setq helm-candidate-number-limit 100) ;; 자동완성 후보 숫자를 제한해 속도를 높입니다.
-
-     ;; 검색 결과의 업데이트 속도를 더 빠르게 합니다.
-     ;; 참고: https://gist.github.com/antifuchs/9238468
-     (setq helm-idle-delay 0.0 ;; update fast sources immediately (doesn't).
-           helm-input-idle-delay 0.01  ;; this actually updates things
-                                       ;; reeeelatively quickly.
-           helm-quick-update t
-           helm-M-x-requires-pattern nil
-           helm-ff-skip-boring-files t)
-     (customize-set-variable 'helm-ff-lynx-style-map t)
-     (helm-mode))
-   :bind (("M-x" . helm-M-x)
-	  ("C-c h" . helm-mini)
-	  ("C-x b" . helm-buffers-list)
-	  ("C-h a" . helm-apropos)
-	  ("C-x C-f" . helm-find-files)
-	  ("C-x c o" . helm-occur)
-
-	 
-	  ))
- #+END_SRC
 *** ivy
+[[https://github.com/abo-abo/swiper][ivy]]는 Emacs의 자동완성 기능을 확장시켜 주는 패키지입니다. 기존에 쓰이던 [[https://github.com/emacs-helm/helm][Helm]]은 다양한 기능을 제공하고 있지만, 그 반대급부로 구동이 무거워지는 단점이 있어서 많은 사람들이 선택하는 대안입니다(참고: [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][From helm, to ivy]], [[http://blog.binchen.org/posts/hello-ivy-mode-bye-helm.html][Hello Ivy-mode, bye Helm]] 등).
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy
   :diminish (ivy-mode . "")
@@ -674,9 +642,9 @@ Emacs를 편하게 사용하기 위한 인터페이스 관련 패키지들의 �
 Emacs를 전체화면으로 표시하고, 불필요한 요소들은 숨겨서 글쓰기에 집중할 수 있도록 하는 모드입니다.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package writeroom-mode
-  )
+(use-package writeroom-mode)
 #+END_SRC
+
 *** wc-mode
 wc-mode는 모드 라인에 단어수를 표시하는 패키지입니다.
 
@@ -684,7 +652,8 @@ wc-mode는 모드 라인에 단어수를 표시하는 패키지입니다.
 (use-package wc-mode
   :config
   (setq wc-modeline-format
-	(concat "[%tw" (if wc-word-goal "/%gw") "w %tc" (if wc-char-goal "/%gc") "c]"))
+	(concat "[%tw" (if wc-word-goal "/%gw") "w %tc" (if wc-char-goal
+							    "/%gc") "c]"))
   :bind ("C-c w" . wc-mode)) 
 #+END_SRC
 
@@ -792,17 +761,20 @@ AUCTeX는 Emacs에서 더 편하게 LaTeX 파일을 편집하도록 도와주는
 #+END_SRC
 
 *** Asciidoc
-    asciidoc을 지원하기 위한 패키지를 추가합니다.
-    #+begin_src emacs-lisp :tangle yes
-      (use-package adoc-mode
+asciidoc을 지원하기 위한 패키지를 추가합니다.
+
+#+begin_src emacs-lisp :tangle yes
+(use-package adoc-mode
 	:requires markup-faces
 	:mode "\\.adoc?\\'")
-      (use-package markup-faces
+
+(use-package markup-faces
 	:config
         (set-face-attribute 'markup-meta-face nil
                       :height 1.0
                       :foreground (face-attribute 'font-lock-comment-face :foreground)))
-    #+end_src
+#+end_src
+
 ** 기타
 
 *** Miniedit
@@ -892,7 +864,7 @@ Emacs 내부에서 자체적으로 pdf 파일을 읽는 기능을 제공합니�
 (use-package seoul256-theme
   :init
   (setq seoul256-background 233
-      seoul256-alternate-background 252)
+	seoul256-alternate-background 252)
   (load-theme 'seoul256 t))
 #+END_SRC
 *** smart-mode-line

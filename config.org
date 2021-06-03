@@ -466,12 +466,13 @@ org-mode는 설정 파일을 불러오는 데에도 쓸 수 있지만, 그 외�
   ;; 기본적으로 org-mode는 shift + 방향키로 블록 선택하는 것을 막아놓고 있습니다. 이를 옵션을 통해 해제해 줍니다.
   (setq org-support-shift-select t) 
 
-  ;; org-mode 문서를, 항목의 깊이에 따라 들여쓰기하도록 설정합니다. 단, 항목의 star는 숨기지 않습니다.
+  ;; org-mode 문서를, 항목의 깊이에 따라 들여쓰기된 상태로 보이도록 설정합니다. 단, heading의 star는 숨기지 않습니다.
   (progn
-    (setq org-startup-indented nil)
+    (setq org-startup-indented t)
     (setq org-hide-leading-stars nil)
-    (setq org-adapt-indentation t)
+    (setq org-adapt-indentation n)
     (setq org-src-preserve-indentation t)
+    (setq org-indent-mode-turns-on-hiding-stars nil)
     )
 
   ;; org-mode는 기본적으로 강조문(굵게, 이탤릭 등)을 하나의 단어에 대해서만 적용하도록 하고 있습니다. 예컨대 *이렇게*는 굵게 글씨를 쓸 수 없습니다. 조사가 들어가는 한중일 언어에 쓰기에는 부적절한 정책입니다. 따라서 강조문자 양 옆에 (알파벳이 아닌) 멀티바이트 문자가 오더라도 작동하도록 설정을 변경합니다(물론 이는 완전한 해결책은 아니며, 더 합리적인 방법에 대해서는 고민이 필요합니다.

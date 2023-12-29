@@ -6,6 +6,7 @@
 * 개요
 이 설정파일은 GNU Emacs를 빠르고 쉽게 사용하기 위하여 작성되었습니다. 
 
+
 Emacs는 매우 강력하고 훌륭한 프로그램이지만, 그 방대함은 사용자로 하여금 쉽게 길을 잃게 만듭니다. 따라서 인터넷에 공개된 수많은 Emacs 설정 파일은 그 헤메임의 기록이며, 사람들로 하여금 이정표 역할을 해줍니다. 이 파일도 그 기록 중 하나입니다.
 
 특별히, 이 파일의 설명은 한국어로 쓰여졌습니다. 이는 공개된 Emacs 설정에 대한 정보를 찾아다니던 중, 한국어로 되어 있는 것이 거의 없으므로 발생하는 어려움에 대한 대응입니다. 물론 Emacs를 사용하는 많은 사람들은 영어로 정보를 습득하는 데 어려움이 없긴 할 것이나, 한편으로는 언어적 장벽이 주는 저변 확대는 무시할 수 없습니다. 더욱이, Emacs는 굳이 프로그래머가 아니더라도 글쓰는 사람들에게 좋은 도구가 되어줍니다. [[http://orgmode.org][org-mode]]를 사용한 정리된 글쓰기, [[https://jblevins.org/projects/deft/][Deft]]의 강력한 파일 관리 기능, 혹은 Emacs 내부에 포함된 여러 기능들은 단지 프로그래머가 아니라 일상적으로 컴퓨터 앞에 앉는 모든 사람들에게 도움이 됩니다. 이 설정파일은, 그러한 사람들에게 도움이 되는 것을 의도하고 있습니다.
@@ -367,12 +368,12 @@ Home 및 End 키가 줄의 처음과 끝으로 이동시키도록(각각 C-a, C-
 	   (resx (- (cadr (cdr res)) (car res)))
 	   (dpi (* (/ (float resx) sizex) 25.4)))
       (cond ((< dpi 110)	     
-             (setq x-font-height 16))
+             (setq x-font-height 14))
 	    ((< dpi 130)
-	     (setq x-font-height 18))
+	     (setq x-font-height 16))
 	    ((< dpi 160)
-	     (setq x-font-height 20))
-	    (t (setq x-font-height 22))))
+	     (setq x-font-height 18))
+	    (t (setq x-font-height 20))))
     (cond
      ((string= opt "c") ;; "c" means "codding"
       (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "IBM Plex Mono" (- x-font-height 1)))
